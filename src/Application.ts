@@ -31,7 +31,11 @@ export class Application extends BasicComponent {
             this._options.render(`#${this._guid}`);
         //} else if (Url.checkIfUrlLocationContains('cloudsearch.google.com/cloudsearch?')) {
         } else if (Url.checkIfUrlLocationContains('perdu.com')) {
-            this._coveoSearch.render('body');
+            let textbox = document.createElement('input');
+            textbox.id = 'coveo-test-text-box';
+            textbox.type = 'text';
+            document.body.appendChild(textbox);
+            this._coveoSearch.render('body', 'coveo-test-text-box');
         } else if (Url.checkIfUrlLocationContains('cloudsearch.google.com/cloudsearch/search')) {
             // Google Cloud Search full search page
         }

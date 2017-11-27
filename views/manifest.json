@@ -18,13 +18,15 @@
       {
         "run_at": "document_end",
         "matches": [
-          "*://*/*"
+          "*://perdu.com/*",
+          "*://www.perdu.com/*"
         ],
         "js": [
           "js/vendor/jquery-3.2.1.min.js",
           "js/myApp.bundle.js"
         ],
         "css": [
+          "css/main.css"
         ],
         "all_frames": false
       }
