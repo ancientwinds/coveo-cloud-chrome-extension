@@ -26,11 +26,9 @@ export class ChangeWatcher extends BasicComponent {
 
     public watchForChanges(): void {
         if (document.getElementById(this._htmlElementId)) {
-            if ((document.getElementById(this._htmlElementId) as HTMLInputElement).value) {
-                if ((document.getElementById(this._htmlElementId) as HTMLInputElement).value != this._currentValue) {
+            if ((document.getElementById(this._htmlElementId) as HTMLInputElement).value != this._currentValue) {
                     this._currentValue = (document.getElementById(this._htmlElementId) as HTMLInputElement).value;
                     this._callBack((document.getElementById(this._htmlElementId) as HTMLInputElement).value);
-                }
             }
 
             let context: ChangeWatcher = this;

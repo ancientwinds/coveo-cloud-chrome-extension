@@ -12,7 +12,7 @@ export class ResultStats extends BasicComponent {
     public render(parent: string): void {
         super.render(parent, `
             <div id="${this._guid}">
-                Coveo found ? result(s) in ? ms
+                Coveo found <b>?</b> result(s) in <b>?</b> seconds
             </div>
         `);
 

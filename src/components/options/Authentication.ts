@@ -18,6 +18,15 @@ export class Authentication  extends BasicComponent {
         this._platform = Configuration.PLATFORM_URL;
     }
 
+    public getUserToken(callback: Function): void {
+        chrome.storage.local.get(
+            ['coveoforgooglecloudsearch_usertoken'], 
+            function(items) {
+                callback(items['coveoforgooglecloudsearch_usertoken']);
+            }
+        );
+    }
+
     public login(): void {
         let redirect_uri = window.location.href;
 

@@ -15,13 +15,11 @@ export class ResultItem extends BasicComponent {
         
         super.render(parent, `
             <div id="${this._guid}">
-                <div class="coveoResultItem">
                 <div class="coveoFileType">${item.raw.filetype}</div>
                 <div class="coveoTitle"><a href="${item.clickUri}">${item.title}</a></div>
                 <div class="coveoDate">${resultDate}</div>
                 <div class="coveoAuthor">${item.raw.author}</div>
                 <div class="coveoDescription">${item.excerpt}</div>
-                </div>
             </div>
         `);
 

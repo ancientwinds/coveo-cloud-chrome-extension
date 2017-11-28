@@ -6,9 +6,10 @@ import { ComponentStore } from './ComponentStore';
 
 export class BasicComponent {
     protected _guid: string = new Guid().toString();
-    protected _className = "BasicComponent";
+    protected _className: string = "BasicComponent";
+    protected _visible: boolean = true;
 
-    constructor(className: string) {
+    constructor(className: string, visible: boolean = true) {
         this._className = className;
         ComponentStore.registerComponent(this);
     }
@@ -29,12 +30,19 @@ export class BasicComponent {
         return btoa(JSON.stringify(args));
     }
 
-    public render(target: string, html: string): void {
+    public render(target: string, html: string, showComponent: boolean = true): void {
         // console.log(`Rendering component ${this._guid} of type ${this._className}`);
         $(target).append(html);
         $(target).html($(target).html().replace(/&nbsp;/g, ''));
         $('#' + this._guid).addClass(this._className);
-        $(target).hide().fadeIn('fast');
+        if (this._visible) {
+            $(target).hide().fadeIn('fast');
+        }
+        
+    }
+
+    public append(target: string, html: string): void {
+        $(target).append(html);
     }
 
     public remove(): void {

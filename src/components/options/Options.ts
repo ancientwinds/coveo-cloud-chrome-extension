@@ -3,10 +3,12 @@ declare let chrome: any;
 import { BasicComponent } from '../BasicComponent';
 import { ComponentStore } from '../ComponentStore';
 import { Authentication } from './Authentication'
+import { Organizations } from './Organizations';
+import { Configuration } from './Configuration';
 
 export class Options extends BasicComponent {
     private _organizationId = null;
-    private _token = null;
+    private _userToken = null;
     private _loginValidationTimer = null;
 
     constructor() {
@@ -17,29 +19,39 @@ export class Options extends BasicComponent {
         Save option items in the local storage
     */
     public saveOptions(): void {
+        debugger;
+        let context: Options = this;
         // Save it using the Chrome extension storage API.
         chrome.storage.local.set(
             {
-                'coveoforgooglecloudsearch_organization': this._organizationId
+                'coveoforgooglecloudsearch_organization': context._organizationId
             }, 
             function() {
-                // Add a confirmation?
+                document.getElementById('messages').innerHTML = 'Saved!';
+                setTimeout(function() {
+                    document.getElementById('messages').innerHTML = '';
+                }, 1000);
             }
         );
     }
+
     /*
         Get option items from the local storage
     */
     public loadOptions(): void {
         let context: any = this;
+
+        // TODO: Régler le select de l'org... ça chie...
+        // Faut voir ou ça accroche... ça le sauve pas... mais le token oui...
+
         chrome.storage.local.get(
             {
                 'coveoforgooglecloudsearch_usertoken': null,
                 'coveoforgooglecloudsearch_organization': null
             }, 
             function(items) {
-                context._organization = items.coveoforgooglecloudsearch_organization;
-                context._token = items.coveoforgooglecloudsearch_usertoken;
+                context._organizationId = items['coveoforgooglecloudsearch_organization'];
+                context._userToken = items['coveoforgooglecloudsearch_usertoken'];
 
                 context.validateOptions();
             }
@@ -49,43 +61,76 @@ export class Options extends BasicComponent {
 
     public afterTokenValidation(xhttp): void {
         if (xhttp.readyState == 4 && xhttp.status == "200") {
-            document.getElementById("loginStatus").innerHTML = "User is logged in.";
-            // TODO: Clear timeout
-            // TODO: Load orgs... set one... get from local storage, blablabla
-        } else {
-            this._organizationId = null;
-            this._token = null;
-            document.getElementById("loginStatus").innerHTML = "Unable to login.";
+            clearTimeout(this._loginValidationTimer);
 
-            // TODO: Set the timer...
+            this.loadOrganizations();
+        } else {
+            this._userToken = null;
+
+            let context: Options = this;
+
+            setTimeout(function() {
+                context.loadOptions();
+            }, 500);
         }
     }
 
-    public validateOptions(token, organization) {
-        let context = this;
+    public validateOptions() {
+        let context: Options = this;
 
-        chrome.storage.local.get(
-            ['coveoforgooglecloudsearch_usertoken'], 
-            function(items) {
-                let auth: Authentication = new Authentication();
-                auth.remove();
-                /*
-                auth.validateToken(
-                    items['coveoforgooglecloudsearch_usertoken'],
-                    (ComponentStore.getComponents().Item(context._guid) as Options).afterTokenValidation
-                );
-                */
+        let auth: Authentication = new Authentication();
+        auth.remove();
+
+        auth.validateToken(
+            this._userToken,
+            function(xhttp: any) {
+                context.afterTokenValidation(xhttp);
+            }
+        );
+    }
+
+    public loadOrganizations(): void {
+        document.getElementById('messages').innerHTML = this._organizationId;
+
+        let context: Options = this;
+
+        Organizations.getOrganizationList(
+            this._userToken,
+            function (response: any) {
+                for (let index in response['items']) {
+                    let organization: any = response['items'][index];
+                    
+                    let option: HTMLOptionElement = document.createElement('option');
+                    option.value = organization['id'];
+                    option.innerHTML = organization['displayName'];
+                    if (organization['id'] === context._organizationId) {
+                        option.selected = true;
+                    }
+                    document.getElementById('organizations').appendChild(option);
+                }
             }
         );
     }
 
     public render(parent: string): void {
         super.render(parent, `
-            <h4>Login</h4>
-        
-            <div id="loginStatus"></div>
-        
-            <iframe id="loginFrame" style="border: none; width: 300px; height: 400px;" src="login.html"></iframe>
+            <h4>Organization</h4>
+            <br />
+            <select id="organizations">
+                <option value="none">Please select an organization</option>
+            </select>
+            <br /><br />
+            <h4>Login status</h4>
+            <iframe id="loginFrame" style="border: none; width: 300px; height: 300px;" src="login.html"></iframe>
+            <div id="messages"></div>
         `);
+
+        let context: Options = this;
+
+        document.getElementById('organizations').addEventListener("change", function() {
+            let select: HTMLSelectElement = document.getElementById('organizations') as HTMLSelectElement;
+            context._organizationId = (select.options[select.selectedIndex] as HTMLOptionElement).value;
+            context.saveOptions();
+        });
     }
 }
