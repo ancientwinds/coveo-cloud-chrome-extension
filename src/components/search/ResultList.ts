@@ -5,19 +5,20 @@ import { BasicComponent } from '../../components/BasicComponent';
 import { ComponentStore } from '../../components/ComponentStore';
 import { ResultItem } from './ResultItem';
 import { ResultStats } from './ResultStats';
-import { Facets } from './Facets';
+import { FacetList } from './FacetList';
 import { SearchBar } from './SearchBar';
 
 export class ResultList extends BasicComponent {
     private _searchBar: SearchBar = new SearchBar();
     private _resultStats: ResultStats = new ResultStats();
-    private _facets: Facets = new Facets();
+    private _facets: FacetList = new FacetList();
     private _coveoSearchId: string = null;
 
     constructor(coveoSearchId: string) {
         super('ResultList');
         this._coveoSearchId = coveoSearchId;
         this._searchBar.setCoveoSearchId(coveoSearchId);
+        this._facets.setCoveoSearchId(coveoSearchId);
     }
 
     public appendResults(results): void {
@@ -25,11 +26,18 @@ export class ResultList extends BasicComponent {
     }
 
     public clearResults(): void {
-        // TODO: Do something
+        this._facets.clearFacets();
+        $(`#${this._guid}-results`).html('');
     }
 
     public showResults(results: any) {
-        // TODO: Do something
+        let renderingContainer: string = `#${this._guid}-results`;
+        this._resultStats.updateStats(results.totalCount, results.duration / 1000);
+        this._facets.updateFacets(results.groupByResults)
+        results.results.forEach(function(item){
+            let result: ResultItem = new ResultItem(item, true, false);
+            result.render(renderingContainer);
+        });
     }
 
     public getSearchBarId(): string {
@@ -61,21 +69,33 @@ export class ResultList extends BasicComponent {
         // Render child components
         this._searchBar.render(`#${this._guid}-wrap`);
         this._resultStats.render(`#${this._guid}-wrap`);
-        this._facets.render(`#${this._guid}-wrap`);
         this.append(`#${this._guid}-wrap`, `
-            <div id="${this._guid}-results" class="ResultListResults">
-                <div id="FAKE_RESULT_ITEM" class="ResultItem">
-                    <div class="coveoFileType">DOC</div>
-                    <div class="coveoTitle"><a href="http://perdu.com">My title</a></div>
-                    <div class="coveoDate">2017-11-27 - </div><div class="coveoAuthor">Jean-Fran&ccedil;ois Cloutier</div>
-                    <div class="coveoDescription">This is a description for the fake item.</div>
+            <div id="${this._guid}-resultsContainer" class="ResultListResultsContainer">
+                <div id="${this._guid}-results" class="ResultListResults">
                 </div>
             </div>
         `);
+        this._facets.render(`#${this._guid}-resultsContainer`);
 
         // Hide the result page.
         document.getElementById(this._guid).style.display = 'none';
 
-        // TODO: Binder les actions
+        // Bind escape actions
+        document.getElementById(`${this._guid}-wrap`).addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+
+        let context: ResultList = this;
+        document.getElementById(this._guid).addEventListener('click', function() {
+            document.getElementById(context._guid).style.display = 'none';
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (e.keyCode == 27) { // Escape
+                document.getElementById(context._guid).style.display = 'none';
+            } else if (e.altKey && e.keyCode == 83) { // ALT+s
+                document.getElementById(context._guid).style.display = 'block';
+            }
+        });
     }
 }

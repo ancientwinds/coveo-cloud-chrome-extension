@@ -11,6 +11,10 @@ export class CoveoButton extends BasicComponent {
         super('CoveoButton');
     }
 
+    public updateNumberOfResultsLabel(numberOfResults: number): void {
+        $(`#${this._guid}-caption`).html(numberOfResults);
+    }
+
     public render(parent: string, resultListPanelId): void {
         this._resultListPanelId = resultListPanelId;
 

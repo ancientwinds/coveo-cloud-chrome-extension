@@ -9,9 +9,11 @@ export class BasicComponent {
     protected _className: string = "BasicComponent";
     protected _visible: boolean = true;
 
-    constructor(className: string, visible: boolean = true) {
+    constructor(className: string, visible: boolean = true, registerComponent: boolean = true) {
         this._className = className;
-        ComponentStore.registerComponent(this);
+        if (registerComponent) {
+            ComponentStore.registerComponent(this);
+        }
     }
 
     public getComponentId(): string {
@@ -43,6 +45,10 @@ export class BasicComponent {
 
     public append(target: string, html: string): void {
         $(target).append(html);
+    }
+
+    public unregister() {
+        ComponentStore.unregisterComponent(this);
     }
 
     public remove(): void {

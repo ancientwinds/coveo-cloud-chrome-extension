@@ -36,6 +36,7 @@ export class Application extends BasicComponent {
             textbox.type = 'text';
             document.body.appendChild(textbox);
             this._coveoSearch.render('body', 'coveo-test-text-box');
+            this._coveoSearch.search({'searchQuery': ''});
         } else if (Url.checkIfUrlLocationContains('cloudsearch.google.com/cloudsearch/search')) {
             // Google Cloud Search full search page
         }
@@ -63,7 +64,11 @@ export class Application extends BasicComponent {
                     context._authentication.validateToken(userToken, function(xhttp: any) {
                         if (xhttp.status === 200) {
                             context._coveoSearch.setUserToken(userToken);
-                            context.renderUserIsLoggedIn();
+                            context._options.loadOptions(function () {
+                                context._coveoSearch.setOrganizationId(context._options.getOrganizationId());
+                                context.renderUserIsLoggedIn();
+                            });
+                            
                         } else {
                             context.renderUserIsNotLoggedIn();
                         }  

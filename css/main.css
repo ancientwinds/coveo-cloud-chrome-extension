@@ -17,13 +17,13 @@ body {
 
 .CoveoButton div {
     position: absolute;
-    top: 6px;
+    top: 12px;
 
     width: 100%;
 
     text-align: center;
 
-    font-size: 20px;
+    font-size: 10px;
     font-weight: bold;
 
     color: white;
@@ -49,6 +49,9 @@ body {
 .ResultList .ResultListWrap {
     background-color: white;
     
+    display: flex;
+    flex-direction: column;
+
     position: fixed;
     top: 100px;
     bottom: 100px;
@@ -57,15 +60,13 @@ body {
 }
 
 .SearchBar {
-    position: relative;
-
-    margin: 20px;
+    margin: 20 20 10 20;
 }
 
 .SearchBar img {
     position: absolute;
-    top: 11px;
-    left: 20px;
+    top: 32px;
+    left: 32px;
 }
 
 .SearchBar input {
@@ -76,15 +77,15 @@ body {
 
     border: none;
 
-    padding-left: 60px;
+    padding-left: 40px;
 }
 
 .SearchBar span {
     display: none;
 
     position: absolute;
-    top: -2px;
-    right: 10px;
+    top: 16px;
+    right: 32px;
 
     cursor: pointer;
 
@@ -92,29 +93,40 @@ body {
 }
 
 .ResultStats {
-    padding-left: 20px;
+    padding: 0 10 10 20;
 
     border-bottom: 1px solid #F6F6F6;
 
     font-size: 16px;
 }
 
+.ResultListResultsContainer {
+    display: flex;
+    flex-direction: row-reverse;
+
+    overflow: hidden;
+}
+
 .ResultListResults {
-    margin: 20px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin: 10 20 20 10;
 }
 
 .Facets {
     float: left;
     width: 250px;
 
-    margin: 20px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin: 10 10 20 20;
 
     font-size: 16px;
 }
 
 .ResultList .ResultItem {
     background-color: white;
-    margin: 0px 30px 10px 30px;
+    margin: 0px 10px 10px 10px;
     padding: 10px;
     height: 100px;
     overflow: hidden;
@@ -129,6 +141,7 @@ body {
     font-size: 10px;
     border: solid gray 1px;
     margin-right: 10px;
+    overflow: hidden;
 }
 
 .ResultList .ResultItem .coveoTitle {

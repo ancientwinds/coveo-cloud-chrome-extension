@@ -7,12 +7,16 @@ import { Organizations } from './Organizations';
 import { Configuration } from './Configuration';
 
 export class Options extends BasicComponent {
-    private _organizationId = null;
-    private _userToken = null;
-    private _loginValidationTimer = null;
+    private _organizationId: string = null;
+    private _userToken: string = null;
+    private _loginValidationTimer: any = null;
 
     constructor() {
         super ('Options');
+    }
+
+    public getOrganizationId(): string {
+        return this._organizationId;
     }
 
     /*
@@ -38,11 +42,8 @@ export class Options extends BasicComponent {
     /*
         Get option items from the local storage
     */
-    public loadOptions(): void {
+    public loadOptions(callback: Function = null): void {
         let context: any = this;
-
-        // TODO: Régler le select de l'org... ça chie...
-        // Faut voir ou ça accroche... ça le sauve pas... mais le token oui...
 
         chrome.storage.local.get(
             {
@@ -53,10 +54,13 @@ export class Options extends BasicComponent {
                 context._organizationId = items['coveoforgooglecloudsearch_organization'];
                 context._userToken = items['coveoforgooglecloudsearch_usertoken'];
 
-                context.validateOptions();
+                if (callback) {
+                    callback(context);
+                } else {
+                    context.validateOptions();
+                }
             }
         );
-
     }
 
     public afterTokenValidation(xhttp): void {
