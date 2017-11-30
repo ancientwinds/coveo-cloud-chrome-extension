@@ -145,8 +145,25 @@ body {
     font-size: 12px;
 }
 
-.Facets ul li input {
-    background-color: orange;
+.Facets ul li input[type="checkbox"] {
+    display: none;
+}
+
+.Facets ul li input[type="checkbox"] + label {
+    display: inline-block;
+
+    vertical-align: middle;
+    cursor: pointer;
+    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAARCAYAAAA7bUf6AAAABHNCSVQICAgIfAhkiAAAAE9JREFUOI1jfP32w//rt+4z/Pj1i4EcwMHGxsBEiQEMDAwMP379YmCBGeBqZ0aWIbsPnWJgItsJSGDUkFFDRg0hDzAeOn7+PyVFAQMDAwMAPSAeEbeiNgUAAAAASUVORK5CYII=') left top no-repeat;
+
+    line-height: 20px;
+
+    height: 22px;
+    padding-left: 22px;
+}
+
+.Facets ul li input[type="checkbox"]:checked + label {
+    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAARCAYAAAA7bUf6AAAABHNCSVQICAgIfAhkiAAAALhJREFUOI2t0y0OwkAQhuF3KAnYJtUYgkJxA2oxWEAhOAVX4BLFIFBgsBwBT4JBkxCC30EsJTSF/mz7yUn2yZfJjpjzTtkv4H7DKX6AmFWgzsA7jaqARWqIE6Ie0Gq7I+qBTDbobPuZNV0AuiOIwvJNvgGNQuR6KodkASlE+0N0uraLKwikmzwfSG9sF+cVAwDELNFEm84AmR/hcrCDHOAnkoAgF/iLxBCQC0DGPynyOE5Nt+MHlZEXCxlQbyOxyjUAAAAASUVORK5CYII=') left top no-repeat;
 }
 
 .ResultList .ResultItem {

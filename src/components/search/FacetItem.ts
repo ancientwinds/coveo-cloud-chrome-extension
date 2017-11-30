@@ -34,7 +34,7 @@ export class FacetItem extends BasicComponent {
 
         this._facet.values.forEach(function (value) {
             let facetId: string = `${context._facet.field}.${value.value.replace(/ /g, '')}`;
-            $(`#${context._guid}-values`).append(`<li><input${checkedString} class="FacetCheckbox" id="${facetId}" type="checkbox" value="@${context._facet.field}='${value.value}'" /> ${value.value} (${value.numberOfResults})</li>`);
+            $(`#${context._guid}-values`).append(`<li><input${checkedString} class="FacetCheckbox" id="${facetId}" type="checkbox" value="@${context._facet.field}='${value.value}'" /><label for="${facetId}"> ${value.value} (${value.numberOfResults})</label></li>`);
         });
     }
 }
