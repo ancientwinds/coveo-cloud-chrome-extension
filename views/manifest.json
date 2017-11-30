@@ -19,7 +19,11 @@
         "run_at": "document_end",
         "matches": [
           "*://perdu.com/*",
-          "*://www.perdu.com/*"
+          "*://www.perdu.com/*",
+          "*://cloudsearch.google.com/*",
+          "*://www.google.com/*",
+          "*://www.google.ca/*",
+          "*://www.google.fr/*"
         ],
         "js": [
           "js/vendor/jquery-3.2.1.min.js",

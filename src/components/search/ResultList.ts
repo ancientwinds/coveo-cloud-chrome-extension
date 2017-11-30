@@ -58,8 +58,10 @@ export class ResultList extends BasicComponent {
         this.renderBasicComponents(parent);
 
         $(`#${this._guid}-wrap`).html(`
-            User is not logo login, please go in the extension options by clicking on blablabla...
+            User is not logo login, please go in the extension options by going in the Coveo extension settings.
         `);
+
+        this.bindUIEvents();
 
         $(`#${this._guid}-wrap`).show();
     }
@@ -81,6 +83,10 @@ export class ResultList extends BasicComponent {
         // Hide the result page.
         document.getElementById(this._guid).style.display = 'none';
 
+        this.bindUIEvents();
+    }
+
+    private bindUIEvents() {
         // Bind escape actions
         document.getElementById(`${this._guid}-wrap`).addEventListener('click', function(e) {
             e.stopPropagation();

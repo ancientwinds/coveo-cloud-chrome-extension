@@ -16,12 +16,6 @@ export class ChangeWatcher extends BasicComponent {
         this._watchIntervalInMiliseconds = watchIntervalInMiliseconds;
 
         this.watchForChanges()
-
-/*         let context: ChangeWatcher = this;
-
-        this._interval = setInterval(function() {
-            ComponentStore.execute(context._guid, 'watchForChanges', context.btoaAndStringify({}))
-        }, this._watchIntervalInMiliseconds); */
     }
 
     public watchForChanges(): void {

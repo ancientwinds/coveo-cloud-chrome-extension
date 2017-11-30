@@ -20,13 +20,10 @@ export class Application extends BasicComponent {
     }
 
     public renderBasicComponents(): void {
-        super.render('body', `
+        super.append('body', `
             <div id="${this._guid}">
             </div>
         `);
-
-
-        this._uiHelper.render();
     }
 
     public renderUserIsLoggedIn() {
@@ -42,8 +39,67 @@ export class Application extends BasicComponent {
             document.body.appendChild(div);
             this._coveoSearch.render('body', 'coveo-test-text-box');
             this._coveoSearch.search({'searchQuery': ''});
-        } else if (Url.checkIfUrlLocationContains('cloudsearch.google.com/cloudsearch/search')) {
-            // Google Cloud Search full search page
+        } else if (Url.checkIfUrlLocationContains('cloudsearch.google.com')) {
+            // Google Cloud Search dashboard search page
+            let searchBar: HTMLDivElement = (document.querySelector('[data-placeholder="Search"]') as HTMLDivElement);
+            if (searchBar) {
+                let searchBox = searchBar.children[1];
+                if (!searchBox['id']) {
+                    searchBox['id'] = 'CoveoSearchElementToBind';
+                }
+
+
+                this._coveoSearch.render('body', searchBox['id']);
+
+                // Adjust style for google cloud search... yeah... unclean but...
+                let magnifier: HTMLImageElement = (document.querySelector('.SearchBar img') as HTMLImageElement);
+                magnifier.style.top = '12px';
+                magnifier.style.left = '12px';
+
+                let clearButton: HTMLDivElement = (document.querySelector('.SearchBar div') as HTMLDivElement);
+                clearButton.style.top = '-2px';
+                clearButton.style.right = '5px';
+
+                let coveoSearchBox : HTMLInputElement = (document.querySelector('.SearchBar input') as HTMLInputElement);
+                coveoSearchBox.style.backgroundColor = 'transparent';
+                coveoSearchBox.maxLength = 128;
+                coveoSearchBox.style.marginBottom = '5px';
+
+                let resultListContainer: HTMLDivElement = (document.querySelector('.ResultListResultsContainer') as HTMLDivElement);
+                resultListContainer.style.padding = '20px';
+
+                // Make a blank search if empty
+                if (!searchBox['value']) {
+                    this._coveoSearch.search({'searchQuery': ''});
+                }
+            }
+        } else if (Url.checkIfUrlLocationContains('www.google.')) {
+            let searchBox: HTMLInputElement = (document.querySelector('[name="q"]') as HTMLInputElement);
+            if (searchBox) {
+                this._coveoSearch.render('body', searchBox.id);
+                
+                // Adjust style for google... yeah... unclean but...
+                let magnifier: HTMLImageElement = (document.querySelector('.SearchBar img') as HTMLImageElement);
+                magnifier.style.top = '12px';
+                magnifier.style.left = '12px';
+
+                let clearButton: HTMLDivElement = (document.querySelector('.SearchBar div') as HTMLDivElement);
+                clearButton.style.top = '-2px';
+                clearButton.style.right = '5px';
+
+                let coveoSearchBox : HTMLInputElement = (document.querySelector('.SearchBar input') as HTMLInputElement);
+                coveoSearchBox.style.backgroundColor = 'transparent';
+                coveoSearchBox.maxLength = 128;
+                coveoSearchBox.style.marginBottom = '5px';
+
+                let resultListContainer: HTMLDivElement = (document.querySelector('.ResultListResultsContainer') as HTMLDivElement);
+                resultListContainer.style.padding = '20px';
+            }
+
+            // Make a blank search if empty
+            if (!searchBox['value']) {
+                this._coveoSearch.search({'searchQuery': ''});
+            }
         }
     }
 

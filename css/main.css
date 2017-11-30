@@ -79,6 +79,10 @@ body {
     padding-left: 40px;
 }
 
+.SearchBar input:focus {
+    outline: none;
+}
+
 .SearchBar div {
     display: none;
 
@@ -140,24 +144,28 @@ body {
     font-size: 12px;
 }
 
+.Facets ul li input {
+    background-color: orange;
+}
+
 .ResultList .ResultItem {
     display: flex;
     flex-direction: row;
     background-color: white;
-    margin: 0px 10px 10px 10px;
+    margin: 0px 10px 0px 10px;
     padding: 10px;
-    height: 100px;
+    min-height: 50px;
     overflow: hidden;
 }
 
 .ResultList .ResultItem .coveoFileType {
+    background-size: 100%;
     min-width: 40px !important;
     width: 40px !important;
     min-height: 40px !important;
     height: 40px !important;
     top:0px;
     font-size: 10px;
-    border: solid gray 1px;
     margin-right: 10px;
     overflow: hidden;
 }

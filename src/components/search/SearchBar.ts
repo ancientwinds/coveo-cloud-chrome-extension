@@ -38,11 +38,13 @@ export class SearchBar extends BasicComponent {
         // WTF?!
         // TODO: test from time to time if it's fixed for chrome, then remove the hack.
         setTimeout(function () {
-            document.getElementById(`${context._guid}-clear`).addEventListener('click', function () {
-                ComponentStore.execute(context._coveoSearchId, 'clearAdvancedQueryExpression', context.btoaAndStringify({'refreshSearch': false}));
-                (document.getElementById(`${context._guid}-searchinput`) as HTMLInputElement).value = '';
-                this.style.display='none';
-            });
+            if (document.getElementById(`${context._guid}-clear`)) {
+                document.getElementById(`${context._guid}-clear`).addEventListener('click', function () {
+                    ComponentStore.execute(context._coveoSearchId, 'clearAdvancedQueryExpression', context.btoaAndStringify({'refreshSearch': false}));
+                    (document.getElementById(`${context._guid}-searchinput`) as HTMLInputElement).value = '';
+                    this.style.display='none';
+                });
+            }
         }, 0);
 
         this._changeWatcher = new ChangeWatcher(`${this._guid}-searchinput`, function (searchQuery: string) {

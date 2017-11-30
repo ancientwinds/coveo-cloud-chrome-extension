@@ -58,6 +58,7 @@ export class Authentication  extends BasicComponent {
             function() {
                 $('#validToken').hide();
                 $('#invalidToken').show();
+                // TODO: Clear the select box...
             }
         );
     }
