@@ -39,7 +39,7 @@ export class UIHelper extends BasicComponent {
         resultList.style.color = 'black';
 
         let resultListResults: HTMLDivElement = (document.querySelector('.ResultListResults') as HTMLDivElement);
-        resultListResults.style.paddingLeft = '10px';
+        resultListResults.style.paddingLeft = '13px';
 
         let searchBar: HTMLDivElement = (document.querySelector('.SearchBar') as HTMLDivElement);
         searchBar.style.margin = '20px 20px 10px 20px';
