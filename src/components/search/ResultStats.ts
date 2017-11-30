@@ -18,7 +18,5 @@ export class ResultStats extends BasicComponent {
             <div id="${this._guid}">
             </div>
         `);
-
-        // TODO: Binder les actions
     }
 }

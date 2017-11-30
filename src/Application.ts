@@ -31,10 +31,15 @@ export class Application extends BasicComponent {
 
     public renderUserIsLoggedIn() {
         if (Url.checkIfUrlLocationContains('perdu.com')) {
+            let div = document.createElement('div');
+            div.className = 'coveo-labs';
             let textbox = document.createElement('input');
             textbox.id = 'coveo-test-text-box';
+            textbox.className = 'biggest-coveo-search-box-ever'
             textbox.type = 'text';
-            document.body.appendChild(textbox);
+            textbox.placeholder = 'Coveo Search';
+            div.appendChild(textbox);
+            document.body.appendChild(div);
             this._coveoSearch.render('body', 'coveo-test-text-box');
             this._coveoSearch.search({'searchQuery': ''});
         } else if (Url.checkIfUrlLocationContains('cloudsearch.google.com/cloudsearch/search')) {

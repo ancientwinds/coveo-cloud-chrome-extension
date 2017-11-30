@@ -24,7 +24,5 @@ export class CoveoButton extends BasicComponent {
                 <div id="${this._guid}-caption">?</div>
             </div>
         `);
-
-        // TODO: Binder les actions
     }
 }

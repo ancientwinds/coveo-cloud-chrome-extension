@@ -23,7 +23,6 @@ export class Options extends BasicComponent {
         Save option items in the local storage
     */
     public saveOptions(): void {
-        debugger;
         let context: Options = this;
         // Save it using the Chrome extension storage API.
         chrome.storage.local.set(

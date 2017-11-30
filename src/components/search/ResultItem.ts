@@ -19,12 +19,12 @@ export class ResultItem extends BasicComponent {
         super.render(parent, `
             <div id="${this._guid}">
                 <div class="coveoFileType">${this._item.raw.filetype}</div>
-                <div class="coveoTitle"><a href="${this._item.clickUri}">${this._item.title}</a></div>
-                <div class="coveoDate">${resultDate} - </div><div class="coveoAuthor">${this._item.raw.author}</div>
-                <div class="coveoDescription">${this._item.excerpt}</div>
+                <div>
+                    <div class="coveoTitle"><a href="${this._item.clickUri}">${this._item.title}</a></div>
+                    <div class="coveoDate">${resultDate} - </div><div class="coveoAuthor">${this._item.raw.author}</div>
+                    <div class="coveoDescription">${this._item.excerpt}</div>
+                </div>
             </div>
         `);
-
-        // TODO: Binder les actions
     }
 }

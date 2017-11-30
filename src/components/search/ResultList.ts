@@ -7,6 +7,7 @@ import { ResultItem } from './ResultItem';
 import { ResultStats } from './ResultStats';
 import { FacetList } from './FacetList';
 import { SearchBar } from './SearchBar';
+import { CoveoSearch } from './CoveoSearch';
 
 export class ResultList extends BasicComponent {
     private _searchBar: SearchBar = new SearchBar();
@@ -30,10 +31,10 @@ export class ResultList extends BasicComponent {
         $(`#${this._guid}-results`).html('');
     }
 
-    public showResults(results: any) {
+    public showResults(results: any, coveoSearchId: string) {
         let renderingContainer: string = `#${this._guid}-results`;
         this._resultStats.updateStats(results.totalCount, results.duration / 1000);
-        this._facets.updateFacets(results.groupByResults)
+        this._facets.updateFacets(results.groupByResults, coveoSearchId);
         results.results.forEach(function(item){
             let result: ResultItem = new ResultItem(item, true, false);
             result.render(renderingContainer);
@@ -62,7 +63,7 @@ export class ResultList extends BasicComponent {
 
         $(`#${this._guid}-wrap`).show();
     }
-
+    
     public render(parent: string): void {
         this.renderBasicComponents(parent);
 
