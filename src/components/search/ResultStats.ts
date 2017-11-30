@@ -10,7 +10,7 @@ export class ResultStats extends BasicComponent {
     }
 
     public updateStats(numberOfResults: number, executionTimeInSeconds: number) {
-        $(`#${this._guid}`).html(`Coveo found <b>${numberOfResults}</b> result(s) in <b>${executionTimeInSeconds}</b> seconds`);
+        $(`#${this._guid}`).html(`Coveo found <span class="CoveoBold">${numberOfResults}</span> result(s) in <span class="CoveoBold">${executionTimeInSeconds}</span> seconds`);
     }
 
     public render(parent: string): void {

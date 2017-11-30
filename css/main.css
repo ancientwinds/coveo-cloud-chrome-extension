@@ -42,6 +42,9 @@ body {
 
     display: none;
 
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    color: black;
+
     z-index: 9998 !important;
 }
 
@@ -87,8 +90,9 @@ body {
     display: none;
 
     position: absolute;
-    top: 16px;
+    top: 18px;
     right: 32px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 
     cursor: pointer;
 
@@ -103,6 +107,11 @@ body {
     border-bottom: 1px solid #F6F6F6;
 
     font-size: 16px;
+}
+
+.CoveoBold {
+    font-weight: bold;
+    color: black;
 }
 
 .ResultListResultsContainer {
@@ -174,6 +183,7 @@ body {
     padding: 10px;
     min-height: 50px;
     overflow: hidden;
+    border-bottom: 1px solid #F6F6F6;
 }
 
 .ResultList .ResultItem .coveoFileType {
