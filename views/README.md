@@ -3,9 +3,6 @@
 ## Description
 Provides a Chrome extension that hooks on several pages to complement some search boxes like google using the content of your coveo organization.
 
-#### Additional notes
-TODO
-
 ## How to build
 1. TODO
 
