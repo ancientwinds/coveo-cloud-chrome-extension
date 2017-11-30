@@ -17,4 +17,8 @@ Google Chrome or Chromium
 Access to a coveo organization
 
 ## Notes
+Currently hooks on :
+1. perdu.com
+2. google.com, google.ca, google.fr
+3. cloudsearch.google.com
 
