@@ -107,7 +107,7 @@ body {
 
 .ResultListResultsContainer {
     display: flex;
-    flex-direction: row-reverse;
+    flex-direction: row;
 
     overflow: hidden;
 }
@@ -116,11 +116,12 @@ body {
     overflow-y: auto;
     overflow-x: hidden;
     margin: 10 20 20 10;
+    width: 100%;
 }
 
 .Facets {
-    float: left;
-    width: 300px;
+    float: left !important;
+    width: 300px !important;
 
     overflow-y: auto;
     overflow-x: hidden;

@@ -74,11 +74,11 @@ export class ResultList extends BasicComponent {
         this._resultStats.render(`#${this._guid}-wrap`);
         this.append(`#${this._guid}-wrap`, `
             <div id="${this._guid}-resultsContainer" class="ResultListResultsContainer">
-                <div id="${this._guid}-results" class="ResultListResults">
-                </div>
             </div>
         `);
         this._facets.render(`#${this._guid}-resultsContainer`);
+
+        $(`#${this._guid}-resultsContainer`).append(`<div id="${this._guid}-results" class="ResultListResults"></div>`);
 
         // Hide the result page.
         document.getElementById(this._guid).style.display = 'none';

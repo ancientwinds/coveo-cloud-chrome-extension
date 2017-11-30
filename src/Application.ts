@@ -48,25 +48,9 @@ export class Application extends BasicComponent {
                     searchBox['id'] = 'CoveoSearchElementToBind';
                 }
 
-
                 this._coveoSearch.render('body', searchBox['id']);
 
-                // Adjust style for google cloud search... yeah... unclean but...
-                let magnifier: HTMLImageElement = (document.querySelector('.SearchBar img') as HTMLImageElement);
-                magnifier.style.top = '12px';
-                magnifier.style.left = '12px';
-
-                let clearButton: HTMLDivElement = (document.querySelector('.SearchBar div') as HTMLDivElement);
-                clearButton.style.top = '-2px';
-                clearButton.style.right = '5px';
-
-                let coveoSearchBox : HTMLInputElement = (document.querySelector('.SearchBar input') as HTMLInputElement);
-                coveoSearchBox.style.backgroundColor = 'transparent';
-                coveoSearchBox.maxLength = 128;
-                coveoSearchBox.style.marginBottom = '5px';
-
-                let resultListContainer: HTMLDivElement = (document.querySelector('.ResultListResultsContainer') as HTMLDivElement);
-                resultListContainer.style.padding = '20px';
+                UIHelper.adjustStyleForGoogle();
 
                 // Make a blank search if empty
                 if (!searchBox['value']) {
@@ -77,23 +61,8 @@ export class Application extends BasicComponent {
             let searchBox: HTMLInputElement = (document.querySelector('[name="q"]') as HTMLInputElement);
             if (searchBox) {
                 this._coveoSearch.render('body', searchBox.id);
-                
-                // Adjust style for google... yeah... unclean but...
-                let magnifier: HTMLImageElement = (document.querySelector('.SearchBar img') as HTMLImageElement);
-                magnifier.style.top = '12px';
-                magnifier.style.left = '12px';
 
-                let clearButton: HTMLDivElement = (document.querySelector('.SearchBar div') as HTMLDivElement);
-                clearButton.style.top = '-2px';
-                clearButton.style.right = '5px';
-
-                let coveoSearchBox : HTMLInputElement = (document.querySelector('.SearchBar input') as HTMLInputElement);
-                coveoSearchBox.style.backgroundColor = 'transparent';
-                coveoSearchBox.maxLength = 128;
-                coveoSearchBox.style.marginBottom = '5px';
-
-                let resultListContainer: HTMLDivElement = (document.querySelector('.ResultListResultsContainer') as HTMLDivElement);
-                resultListContainer.style.padding = '20px';
+                UIHelper.adjustStyleForGoogle();
             }
 
             // Make a blank search if empty
