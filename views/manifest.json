@@ -25,15 +25,8 @@
       {
         "run_at": "document_end",
         "matches": [
-          "*://perdu.com/*",
-          "*://www.perdu.com/*",
-          "*://cloudsearch.google.com/*",
-          "*://*.google.com/*",
-          "*://*.google.ca/*",
-          "*://*.google.fr/*",
-          "*://*.office.com/*",
-          "*://stackoverflow.com/*",
-          "*://*.stackoverflow.com/*"
+          "http://*/*",
+          "https://*/*"
         ],
         "js": [
           "js/vendor/jquery-3.2.1.min.js",
