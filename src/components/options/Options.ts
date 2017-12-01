@@ -9,6 +9,8 @@ import { Configuration } from './Configuration';
 export class Options extends BasicComponent {
     private _organizationId: string = null;
     private _userToken: string = null;
+    private _hostedSearchPage: string = null;
+
     private _loginValidationTimer: any = null;
 
     constructor() {
@@ -19,6 +21,14 @@ export class Options extends BasicComponent {
         return this._organizationId;
     }
 
+    public getHostedSearchPage(): string {
+        return this._hostedSearchPage;
+    }
+
+    public getUserToken(): string {
+        return this._userToken;
+    }
+
     /*
         Save option items in the local storage
     */
@@ -27,7 +37,8 @@ export class Options extends BasicComponent {
         // Save it using the Chrome extension storage API.
         chrome.storage.local.set(
             {
-                'coveoforgooglecloudsearch_organization': context._organizationId
+                'coveoforgooglecloudsearch_organization': context._organizationId,
+                'coveoforgooglecloudsearch_hostedSearchPage': context._hostedSearchPage
             }, 
             function() {
                 document.getElementById('messages').innerHTML = 'Saved!';
@@ -36,6 +47,10 @@ export class Options extends BasicComponent {
                 }, 1000);
             }
         );
+
+        chrome.runtime.sendMessage({
+            command: "loadOptions"
+        });
     }
 
     /*
@@ -47,11 +62,13 @@ export class Options extends BasicComponent {
         chrome.storage.local.get(
             {
                 'coveoforgooglecloudsearch_usertoken': null,
-                'coveoforgooglecloudsearch_organization': null
+                'coveoforgooglecloudsearch_organization': null,
+                'coveoforgooglecloudsearch_hostedSearchPage': null
             }, 
             function(items) {
                 context._organizationId = items['coveoforgooglecloudsearch_organization'];
                 context._userToken = items['coveoforgooglecloudsearch_usertoken'];
+                context._hostedSearchPage = items['coveoforgooglecloudsearch_hostedSearchPage'];
 
                 if (callback) {
                     callback(context);
@@ -67,6 +84,7 @@ export class Options extends BasicComponent {
             clearTimeout(this._loginValidationTimer);
 
             this.loadOrganizations();
+            this.loadHostedSearchPages(this._organizationId);
         } else {
             this._userToken = null;
 
@@ -92,9 +110,7 @@ export class Options extends BasicComponent {
         );
     }
 
-    public loadOrganizations(): void {
-        document.getElementById('messages').innerHTML = this._organizationId;
-
+    private loadOrganizations(): void {
         let context: Options = this;
 
         Organizations.getOrganizationList(
@@ -115,12 +131,45 @@ export class Options extends BasicComponent {
         );
     }
 
+    private loadHostedSearchPages(organizationId): void {
+        let context: Options = this;
+
+        Organizations.getHostedSearchPagesList(
+            this._userToken,
+            organizationId,
+            function (response: any) {
+                document.getElementById('pages').innerHTML = '<option value="null">Please select a search page</option>';
+                for (let index in response) {
+                    let searchPage: any = response[index];
+                    
+                    let option: HTMLOptionElement = document.createElement('option');
+                    option.value = searchPage['name'];
+                    option.innerHTML = searchPage['title'];
+                    if (searchPage['name'] === context._hostedSearchPage) {
+                        option.selected = true;
+                    }
+                    document.getElementById('pages').appendChild(option);
+                }
+
+                
+            }
+        );
+    } 
+
     public render(parent: string): void {
+        let context: Options = this;
+
         super.render(parent, `
             <h4>Organization</h4>
             <br />
-            <select id="organizations">
+            <select id="organizations" class="FullWidthSelect">
                 <option value="none">Please select an organization</option>
+            </select>
+            <br /><br />
+            <h4>Popup Search Page</h4>
+            <br />
+            <select id="pages" class="FullWidthSelect">
+                <option value="none">Please select a search page</option>
             </select>
             <br /><br />
             <h4>Login status</h4>
@@ -128,11 +177,16 @@ export class Options extends BasicComponent {
             <div id="messages"></div>
         `);
 
-        let context: Options = this;
-
         document.getElementById('organizations').addEventListener("change", function() {
             let select: HTMLSelectElement = document.getElementById('organizations') as HTMLSelectElement;
             context._organizationId = (select.options[select.selectedIndex] as HTMLOptionElement).value;
+            context.saveOptions();
+            context.loadHostedSearchPages(context._organizationId);
+        });
+
+        document.getElementById('pages').addEventListener("change", function() {
+            let select: HTMLSelectElement = document.getElementById('pages') as HTMLSelectElement;
+            context._hostedSearchPage = (select.options[select.selectedIndex] as HTMLOptionElement).value;
             context.saveOptions();
         });
     }

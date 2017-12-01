@@ -12,7 +12,22 @@ export class Organizations {
         xhttp.setRequestHeader('Content-type', 'application/json');
         xhttp.setRequestHeader('Authorization', 'Bearer ' + userToken);
         xhttp.onreadystatechange = function () {
-            callback(JSON.parse(xhttp.responseText));
+            callback(JSON.parse(xhttp.response));
+        };
+
+        xhttp.send();
+    }
+
+    public static getHostedSearchPagesList(userToken: string, organizationId: string, callback: Function): void {
+        let url: string = `${Configuration.PLATFORM_URL}/rest/organizations/${organizationId}/pages/?access_token=${userToken}&`;
+
+        let xhttp = new XMLHttpRequest();
+        
+        xhttp.open('GET', url, true);
+        xhttp.setRequestHeader('Content-type', 'application/json');
+        xhttp.setRequestHeader('Authorization', 'Bearer ' + userToken);
+        xhttp.onreadystatechange = function () {
+            callback(JSON.parse(xhttp.response));
         };
 
         xhttp.send();

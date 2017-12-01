@@ -4,16 +4,18 @@ declare let $: any;
 import { Url } from './commons/utils/Url';
 import { BasicComponent } from './components/BasicComponent';
 import { Authentication } from './components/options/Authentication';
-import { UIHelper } from './components/utilities/UIHelper';
 import { Options } from './components/options/Options';
-import { CoveoSearch } from './components/search/CoveoSearch';
+import { Popup } from './components/popup/Popup';
+import { Background } from './components/background/Background';
+import { ChangeWatcher } from './components/utilities/ChangeWatcher';
 import { ComponentStore } from './components/ComponentStore';
 
 export class Application extends BasicComponent {
-    private _uiHelper: UIHelper = new UIHelper();
     private _authentication: Authentication = new Authentication();
     private _options: Options = new Options();
-    private _coveoSearch: CoveoSearch = new CoveoSearch();
+    private _popup: Popup = new Popup();
+    private _background: Background = new Background();
+    private _changeWatcher: ChangeWatcher
 
     constructor() {
         super('Application');
@@ -26,54 +28,48 @@ export class Application extends BasicComponent {
         `);
     }
 
-    public renderUserIsLoggedIn() {
-        if (Url.checkIfUrlLocationContains('perdu.com')) {
-            let div = document.createElement('div');
-            div.className = 'coveo-labs';
-            let textbox = document.createElement('input');
-            textbox.id = 'coveo-test-text-box';
-            textbox.className = 'biggest-coveo-search-box-ever'
-            textbox.type = 'text';
-            textbox.placeholder = 'Coveo Search';
-            div.appendChild(textbox);
-            document.body.appendChild(div);
-            this._coveoSearch.render('body', 'coveo-test-text-box');
-            this._coveoSearch.search({'searchQuery': ''});
-        } else if (Url.checkIfUrlLocationContains('cloudsearch.google.com')) {
-            // Google Cloud Search dashboard search page
-            let searchBar: HTMLDivElement = (document.querySelector('[data-placeholder="Search"]') as HTMLDivElement);
-            if (searchBar) {
-                let searchBox = searchBar.children[1];
-                if (!searchBox['id']) {
-                    searchBox['id'] = 'CoveoSearchElementToBind';
-                }
+    public bindSearch() {
+        let context: Application = this;
 
-                this._coveoSearch.render('body', searchBox['id']);
+        if (Url.checkIfUrlLocationContains('cloudsearch.google.com')) {
+            this.watchInput('[data-placeholder="Search"] input:nth-child(2)', true);
+        } else if (Url.checkIfUrlLocationContains('drive.google.com')) {
+            this.watchInput('[name="q"]');
+        } else if (Url.checkIfUrlLocationContains('outlook.office.com')) {
+            this.watchInput('[autoid="_is_3"]', true);
+        } else if (Url.checkIfUrlLocationContains('html/popup.html')) {
+            this._popup.render('body');
+        } else if (!Url.checkIfUrlLocationContains('cloud.coveo.com/pages')) {
+            this.watchInput('[name="q"]');
+        }
 
-                UIHelper.adjustStyleForGoogle();
+        if (!Url.checkIfUrlLocationContains('cloud.coveo.com/pages') && !Url.checkIfUrlLocationContains('html/popup.html')){
+            this.search('');
+        }
 
-                // Make a blank search if empty
-                if (!searchBox['value']) {
-                    this._coveoSearch.search({'searchQuery': ''});
-                }
+        document.addEventListener("visibilitychange", function () {
+            if (!document.hidden && context._changeWatcher) {
+                context._changeWatcher.executeCallback();
             }
-        } else if (Url.checkIfUrlLocationContains('www.google.')) {
-            let searchBox: HTMLInputElement = (document.querySelector('[name="q"]') as HTMLInputElement);
-            if (searchBox) {
-                this._coveoSearch.render('body', searchBox.id);
+        }, false);
+    }
 
-                UIHelper.adjustStyleForGoogle();
-            }
-
-            // Make a blank search if empty
-            if (!searchBox['value']) {
-                this._coveoSearch.search({'searchQuery': ''});
-            }
+    public watchInput(querySelector: string, ignoreActualElementExistence: boolean = false): void {
+        let searchBox: HTMLInputElement = (document.querySelector(querySelector) as HTMLInputElement);
+        if (searchBox || ignoreActualElementExistence) {
+            let context: Application = this;
+            this._changeWatcher = new ChangeWatcher(querySelector, function (searchQuery: string) { 
+                context.search(searchQuery);
+            }, 200, !ignoreActualElementExistence); 
         }
     }
 
-    public renderUserIsNotLoggedIn(): void {
-        this._coveoSearch.renderUserIsNotLoggedIn('body');
+    public search(query: string): void {
+        chrome.runtime.sendMessage({
+            command: 'search',
+            queryExpression: query,
+            origin: window.location.href 
+        });
     }
 
     public render(): void {
@@ -86,27 +82,11 @@ export class Application extends BasicComponent {
         } else if (Url.checkIfUrlLocationContains('/options.html')) {
             this._options.render(`#${this._guid}`);
             this._options.loadOptions();
+        } else if (Url.checkIfUrlLocationContains('/background.html')) {
+            this._background.loadOptions();
+            this._background.listenForMessages();
         } else {
-            let context: Application = this;
-            
-            this._authentication.getUserToken(function(userToken: string) {
-                if (userToken) {
-                    context._authentication.validateToken(userToken, function(xhttp: any) {
-                        if (xhttp.status === 200) {
-                            context._coveoSearch.setUserToken(userToken);
-                            context._options.loadOptions(function () {
-                                context._coveoSearch.setOrganizationId(context._options.getOrganizationId());
-                                context.renderUserIsLoggedIn();
-                            });
-                            
-                        } else {
-                            context.renderUserIsNotLoggedIn();
-                        }  
-                    })
-                } else {
-                    context.renderUserIsNotLoggedIn();
-                }
-            });
+            this.bindSearch();
         }
     }
 }
@@ -114,12 +94,6 @@ export class Application extends BasicComponent {
 export let _application: Application = null;
 
 $(document).ready(function () {
-    /*
-    setTimeout(function() {
-        _application = new Application();
-        _application.render();
-    }, 3000);
-    */
     _application = new Application();
     _application.render();
 });

@@ -2,6 +2,10 @@ body {
     background-color: whitesmoke;
 }
 
+.FullWidthSelect {
+    width: 100%;
+}
+
 .CoveoButton {
     cursor: pointer;
     position: absolute;

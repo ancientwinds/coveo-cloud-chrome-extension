@@ -9,6 +9,13 @@
       "page": "/html/options.html",
       "chrome_style": true
     },
+    "browser_action": {
+      "default_popup": "html/popup.html",
+      "default_icon": "images/48.png"
+    },
+    "background": {
+      "page": "html/background.html"
+    },
     "icons": {
       "16": "images/16.png",
       "48": "images/48.png",
@@ -21,9 +28,12 @@
           "*://perdu.com/*",
           "*://www.perdu.com/*",
           "*://cloudsearch.google.com/*",
-          "*://www.google.com/*",
-          "*://www.google.ca/*",
-          "*://www.google.fr/*"
+          "*://*.google.com/*",
+          "*://*.google.ca/*",
+          "*://*.google.fr/*",
+          "*://*.office.com/*",
+          "*://stackoverflow.com/*",
+          "*://*.stackoverflow.com/*"
         ],
         "js": [
           "js/vendor/jquery-3.2.1.min.js",
