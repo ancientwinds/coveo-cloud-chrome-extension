@@ -1,0 +1,53 @@
+{
+    "manifest_version": 2,
+    "name": "Coveo for Google Cloud Search",
+    "short_name": "C4GoogleCS",
+    "description": "Adds a Coveo button to Google Cloud Search, to search content from outside the Google Suite. When Clicked, it displays a result overlay.",
+    "version": "0.2",
+    "homepage_url": "https://github.com/coveo-labs/...",
+    "options_ui": {
+      "page": "/html/options.html",
+      "chrome_style": true
+    },
+    "browser_action": {
+      "default_popup": "html/popup.html",
+      "default_icon": "images/48.png"
+    },
+    "background": {
+      "page": "html/background.html"
+    },
+    "icons": {
+      "16": "images/16.png",
+      "48": "images/48.png",
+      "128": "images/128.png"
+    },
+    "content_scripts": [
+      {
+        "run_at": "document_end",
+        "matches": [
+          "http://*/*",
+          "https://*/*"
+        ],
+        "js": [
+          "js/vendor/jquery-3.2.1.min.js",
+          "js/myApp.bundle.js"
+        ],
+        "css": [
+          "css/main.css"
+        ],
+        "all_frames": false
+      }
+    ],
+    "permissions": [
+      "tabs",
+      "http://*/*",
+      "https://*/*",
+      "storage",
+      "webRequest",
+      "webRequestBlocking"
+    ],
+    "web_accessible_resources": [
+      "/html/*",
+      "/js/*"
+    ]
+  }

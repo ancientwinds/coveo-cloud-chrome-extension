@@ -1,0 +1,12 @@
+body {
+    width: 765px;
+    height: 580px;
+}
+
+.ResultList .ResultListWrap {
+    position: fixed;
+    top: 00px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+}
