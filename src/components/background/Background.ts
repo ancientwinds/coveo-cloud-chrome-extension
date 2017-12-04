@@ -19,13 +19,15 @@ export class Background extends BasicComponent {
 
     public loadOptions(): void {
         let context: Background = this;
+
+        this._authentication = new Authentication();
         
         this._authentication.getUserToken(function(userToken: string) {
             if (userToken) {
                 context._authentication.validateToken(userToken, function(xhttp: any) {
                     if (xhttp.status === 200) {
                         context._options.loadOptions(function (options: any) {
-                            context.search('');
+                            context.search(context._activeQuery);
                         });
                     } else {
                         context.updateLabel('...');

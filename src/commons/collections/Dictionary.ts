@@ -1,28 +1,21 @@
 export class Dictionary<T> {
     private items: { [index: string]: T } = {};
 
-    private count: number = 0;
-
     public ContainsKey(key: string): boolean {
         return this.items.hasOwnProperty(key);
     }
 
     public Count(): number {
-        return this.count;
+        return Object.keys(this.items).length
     }
 
     public Add(key: string, value: T): void {
-        if (!this.items.hasOwnProperty(key)) {
-            this.count++;
-        }
-
         this.items[key] = value;
     }
 
     public Remove(key: string): T {
         let val = this.items[key];
         delete this.items[key];
-        this.count--;
         return val;
     }
 
@@ -55,18 +48,10 @@ export class Dictionary<T> {
     }
 
     public Clone(): Dictionary<T> {
-        let clone: Dictionary<T> = new Dictionary<T>();
-        let orgiginal = this;
-
-        this.Keys().forEach(function (key: string) {
-            clone.Add(key, orgiginal.Item(key));
-        });
-
-        return clone;
+        return JSON.parse( JSON.stringify(this.items) );
     }
 
     public Clear(): void {
         this.items = {};
-        this.count = 0;
     }
 }

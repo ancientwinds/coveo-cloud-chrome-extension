@@ -11,6 +11,8 @@ import { Url } from '../../commons/utils/Url';
 */
 export class Authentication  extends BasicComponent {
     private _platform = null;
+    private _lastToken: string = null;
+
     private static _loginValidationTimer = null;
 
     constructor() {
@@ -37,12 +39,14 @@ export class Authentication  extends BasicComponent {
 
         // As all the new windows are loaded in incognito mode (chrome extension limitations), we need to validate once in a while if ther're a token in the local storage
         let context = this;
+        // TODO: Fix that thing... it loops... forever... 
         Authentication._loginValidationTimer = setInterval(function() {
             chrome.storage.local.get(
                 ['coveoforgooglecloudsearch_usertoken'], 
                 function(items) {
                     let auth: Authentication = new Authentication();
-                    if (items['coveoforgooglecloudsearch_usertoken']) {
+                    if (items['coveoforgooglecloudsearch_usertoken'] && context._lastToken != items['coveoforgooglecloudsearch_usertoken']) {
+                        context._lastToken = items['coveoforgooglecloudsearch_usertoken'];
                         auth.validateToken(items['coveoforgooglecloudsearch_usertoken'], context.afterTokenValidation);
                     }
                 }
@@ -58,7 +62,6 @@ export class Authentication  extends BasicComponent {
             function() {
                 $('#validToken').hide();
                 $('#invalidToken').show();
-                // TODO: Clear the select box...
             }
         );
     }
@@ -83,6 +86,10 @@ export class Authentication  extends BasicComponent {
             $('#validToken').hide();
             $('#invalidToken').show();
         }
+
+        chrome.runtime.sendMessage({
+            command: "loadOptions"
+        });
     }
 
     public processOAuthReturn(): void {
