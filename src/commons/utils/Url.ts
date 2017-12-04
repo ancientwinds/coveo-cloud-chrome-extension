@@ -5,13 +5,14 @@ export class Url {
         let hashDict = {};
         
         if (window.location.hash) {
-            let hashes = window.location.hash.substring(1, window.location.hash.length).split('&');
+            let hashes = window.location.hash.substring(1).split('&');
     
             if (hashes) {
                 hashes.map((hash) => {
                     let keyValue = hash.split('=');
-                    
-                    hashDict[keyValue[0]] = keyValue[1];
+                    if (/(\w+?)=(.*)/.test(hash)){
+                        hashDict[RegExp.$1] = RegExp.$2;
+                    }
                 });
             }
         }

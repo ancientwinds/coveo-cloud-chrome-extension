@@ -18,6 +18,12 @@ export class Popup extends BasicComponent {
         `);
     }
 
+    private renderNotLoggedIn(parent: string): void {
+        super.render(parent, `
+            Your are not logged in. To login, right click on the extension's icon, then on "Options".
+        `);
+    }
+
     public render(parent: string): void {
         ChromeHeaderModification.applyHeaderModification();
 
@@ -25,7 +31,11 @@ export class Popup extends BasicComponent {
 
         let message = chrome.runtime.sendMessage({command: 'getActiveQueryAndOptions'},
             function (message) {
-                context.renderIframe(parent, message.activeQuery, message.organizationId, message.hostedSearchPage);
+                if (message.organizationId) {
+                    context.renderIframe(parent, message.activeQuery, message.organizationId, message.hostedSearchPage);
+                } else {
+                    context.renderNotLoggedIn(parent);
+                }
             }
         );
     }
