@@ -1,6 +1,12 @@
 body {
     width: 765px;
     height: 580px;
+
+    background-color: white;
+}
+
+.coveo-logout {
+    display: none; 
 }
 
 .ResultList .ResultListWrap {

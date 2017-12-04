@@ -1,4 +1,5 @@
 declare let chrome: any;
+declare let Coveo: any;
 
 import { BasicComponent } from '../BasicComponent';
 import { ComponentStore } from '../ComponentStore';
@@ -7,6 +8,7 @@ import { Configuration } from '../options/Configuration';
 
 export class Popup extends BasicComponent {
     private _hostedSearchPage: string = null;
+    private _defaultEndpoint = null;
 
     constructor() {
         super ('Popup');
@@ -28,9 +30,16 @@ export class Popup extends BasicComponent {
         ChromeHeaderModification.applyHeaderModification();
 
         let context: Popup = this;
-
         let message = chrome.runtime.sendMessage({command: 'getActiveQueryAndOptions'},
             function (message) {
+                context._defaultEndpoint = Coveo.SearchEndpoint.endpoints["default"] = new Coveo.SearchEndpoint({
+                    restUri: `${Configuration.PLATFORM_URL}/rest/search`,
+                    queryStringArguments: {
+                        organizationId: message.organizationId,
+                        userToken: message.userToken
+                    }
+                });
+
                 if (message.organizationId) {
                     context.renderIframe(parent, message.activeQuery, message.organizationId, message.hostedSearchPage);
                 } else {
