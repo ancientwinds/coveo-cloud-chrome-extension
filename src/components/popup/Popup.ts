@@ -24,9 +24,6 @@ export class Popup extends BasicComponent {
             <div id="search" class="CoveoSearchInterface" data-enable-history="true" data-design="new">
             
             <div class="CoveoAnalytics"></div>
-            <div class="coveo-tab-section">
-                <a class="CoveoTab" data-id="All" data-caption="All Content"></a>
-            </div>
             <div class="coveo-search-section">
                 <div class="CoveoSettings"></div>
                 <div class="CoveoSearchbox" data-enable-omnibox="true"></div>
