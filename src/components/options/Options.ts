@@ -82,7 +82,6 @@ export class Options extends BasicComponent {
             let context: Options = this;
 
             document.getElementById('organizations').innerHTML = '';
-            document.getElementById('pages').innerHTML = '';
 
             this._loginValidationTimer = setTimeout(function() {
                 context.loadOptions();

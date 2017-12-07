@@ -31,10 +31,10 @@ export class Popup extends BasicComponent {
             <div class="coveo-main-section">
                 <div class="coveo-facet-column">
                     <div class="CoveoFacet" data-title="Type" data-field="@objecttype" data-tab="All"></div>
-            <div class="CoveoFacet" data-title="FileType" data-field="@filetype" data-tab="All"></div>
-            <div class="CoveoFacet" data-title="Author" data-field="@author" data-tab="All"></div>
-            <div class="CoveoFacet" data-title="Year" data-field="@year" data-tab="All"></div>
-            <div class="CoveoFacet" data-title="Month" data-field="@month" data-tab="All"></div>
+                    <div class="CoveoFacet" data-title="FileType" data-field="@filetype" data-tab="All"></div>
+                    <div class="CoveoFacet" data-title="Author" data-field="@author" data-tab="All"></div>
+                    <div class="CoveoFacet" data-title="Year" data-field="@year" data-tab="All"></div>
+                    <div class="CoveoFacet" data-title="Month" data-field="@month" data-tab="All"></div>
                 </div>
                 <div class="coveo-results-column">
                     <div class="CoveoShareQuery"></div>
@@ -55,64 +55,64 @@ export class Popup extends BasicComponent {
                         </div>
                         <div class="coveo-sort-section">
                             <span class="CoveoSort" data-sort-criteria="relevancy" data-caption="Relevance"></span>
-            <span class="CoveoSort" data-sort-criteria="date descending,date ascending" data-caption="Date"></span>
+                            <span class="CoveoSort" data-sort-criteria="date descending,date ascending" data-caption="Date"></span>
                         </div>
                     </div>
                     <div class="CoveoHiddenQuery"></div>
                     <div class="CoveoDidYouMean"></div>
                     <div class="CoveoErrorReport" data-pop-up="false"></div>
                     <div class="CoveoResultList" data-layout="list" data-wait-animation="fade" data-auto-select-fields-to-include="true">
-                        <script id="Default" class="result-template" type="text/html" data-layout="list" ><div class="coveo-result-frame">
-                <div class="coveo-result-row">
-                <div class="coveo-result-cell" style="width:85px;text-align:center;padding-top:7px;">
-                    <span class="CoveoIcon">
-                    </span>
-                    <div class="CoveoQuickview">
-                    </div>
-                </div>
-                <div class="coveo-result-cell" style="padding-left:15px;">
-                    <div class="coveo-result-row">
-                    <div class="coveo-result-cell" style="font-size:18px;">
-                        <a class="CoveoResultLink">
-                        </a>
-                    </div>
-                    <div class="coveo-result-cell" style="width:120px; text-align:right; font-size:12px">
-                        <span class="CoveoFieldValue" data-field="@date" data-helper="date">
-                        </span>
-                    </div>
-                    </div>
-                    <div class="coveo-result-row">
-                    <div class="coveo-result-cell">
-                        <span class="CoveoExcerpt">
-                        </span>
-                    </div>
-                    </div>
-                </div>
-                </div>
-                <div class="coveo-result-row">
-                <div class="coveo-result-cell" style="width:85px;text-align:center">
-                </div>
-                <div class="coveo-result-cell" style="font-size:13px;padding-left: 15px;">
-                    <table class="CoveoFieldTable">
-                    <tbody>
-                        <tr data-field="@author" data-caption="Author">
-                        </tr>
-                        <tr data-field="@source" data-caption="Source">
-                        </tr>
-                        <tr data-field="@language" data-caption="Language">
-                        </tr>
-                    </tbody>
-                    </table>
-                </div>
-                </div>
-            </div>
-            </script>
+                        <script id="Default" class="result-template" type="text/html" data-layout="list" >
+                            <div class="coveo-result-frame">
+                                <div class="coveo-result-row">
+                                <div class="coveo-result-cell" style="width:85px;text-align:center;padding-top:7px;">
+                                    <span class="CoveoIcon">
+                                    </span>
+                                    <div class="CoveoQuickview">
+                                    </div>
+                                </div>
+                                <div class="coveo-result-cell" style="padding-left:15px;">
+                                    <div class="coveo-result-row">
+                                    <div class="coveo-result-cell" style="font-size:18px;">
+                                        <a class="CoveoResultLink">
+                                        </a>
+                                    </div>
+                                    <div class="coveo-result-cell" style="width:120px; text-align:right; font-size:12px">
+                                        <span class="CoveoFieldValue" data-field="@date" data-helper="date">
+                                        </span>
+                                    </div>
+                                    </div>
+                                    <div class="coveo-result-row">
+                                    <div class="coveo-result-cell">
+                                        <span class="CoveoExcerpt">
+                                        </span>
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="coveo-result-row">
+                                <div class="coveo-result-cell" style="width:85px;text-align:center">
+                                </div>
+                                <div class="coveo-result-cell" style="font-size:13px;padding-left: 15px;">
+                                    <table class="CoveoFieldTable">
+                                    <tbody>
+                                        <tr data-field="@author" data-caption="Author">
+                                        </tr>
+                                        <tr data-field="@source" data-caption="Source">
+                                        </tr>
+                                        <tr data-field="@language" data-caption="Language">
+                                        </tr>
+                                    </tbody>
+                                    </table>
+                                </div>
+                                </div>
+                            </div>
+                        </script>
                     </div>
                     <div class="CoveoPager"></div>
                     <div class="CoveoLogo"></div>
                     <div class="CoveoResultsPerPage"></div>
                 </div>
-                
             </div>
             </div>
         `);
