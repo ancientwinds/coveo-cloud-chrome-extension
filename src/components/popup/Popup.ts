@@ -22,7 +22,7 @@ export class Popup extends BasicComponent {
     private renderSearchPage(parent: string): void {
         super.render(parent, `
             <div id="search" class="CoveoSearchInterface" data-enable-history="true" data-design="new">
-            
+
             <div class="CoveoAnalytics"></div>
             <div class="coveo-search-section">
                 <div class="CoveoSettings"></div>
@@ -128,7 +128,9 @@ export class Popup extends BasicComponent {
                     restUri: `${Configuration.PLATFORM_URL}/rest/search`,
                     accessToken: message.userToken,
                     queryStringArguments: {
-                        organizationId: message.organizationId
+                        organizationId: message.organizationId,
+                        q: message.activeQuery,
+                        cq: 'NOT (@filetype=(Txt, .oleFile, Folder))'
                     }
                 });
 
