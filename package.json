@@ -1,8 +1,8 @@
 {
-  "name": "myApp",
-  "version": "0.0.0",
+  "name": "coveo-for-google-cloud-search",
+  "version": "0.2.0",
   "description": "",
-  "homepage": "",
+  "homepage": "https://github.com/ancientwinds/coveo-cloud-chrome-extension",
   "author": {
     "name": "FULLNAME",
     "email": "FULLNAME@MAIL.com",
@@ -26,6 +26,9 @@
     "webpack-dev-server": "1.16.5"
   },
   "devDependencies": {
+    "@types/chai": "^4.0.8",
+    "@types/jasmine": "^2.8.2",
+    "@types/mocha": "^2.2.44",
     "body-parser": "^1.15.2",
     "colors": "^1.1.2",
     "ejs": "^2.5.5",
@@ -61,14 +64,17 @@
     "gulp-strip-comments": "^2.4.3",
     "gulp-util": "^3.0.8",
     "gulp-zip": "^3.2.0",
+    "jasmine-ts": "^0.2.1",
+    "karma-typescript": "^3.0.8",
     "merge-stream": "^1.0.1",
     "pretty-typescript": "1.13.0",
     "require-dir": "^0.3.1",
     "run-sequence": "^1.2.2",
-    "ts-loader": "^1.3.3",
-    "typescript": "^1.8.10",
+    "ts-loader": "^3.2.0",
+    "ts-node": "^3.3.0",
+    "typescript": "^2.6.2",
     "underscore": "^1.8.3",
-    "webpack": "^3.8.1",
+    "webpack": "^3.10.0",
     "webpack-dev-server": "^2.9.3",
     "webpack-fail-plugin": "^2.0.0"
   },
