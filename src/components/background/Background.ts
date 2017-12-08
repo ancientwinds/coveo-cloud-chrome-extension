@@ -55,7 +55,7 @@ export class Background extends BasicComponent {
                     sendResponse({
                         activeQuery: context._activeQuery,
                         organizationId: context._options.getOrganizationId(),
-                        hostedSearchPage: context._options.getHostedSearchPage()
+                        userToken: context._options.getUserToken()
                     });
                 } else if (request.command == 'loadOptions') {
                     context.loadOptions();
