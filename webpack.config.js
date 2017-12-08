@@ -14,11 +14,13 @@ module.exports = {
   resolve: {
     extensions: ['*', '.ts', '.js']
   },
-  entry: './src/Application.ts',
+  entry: {
+    myApp: ['./src/Application.ts']
+  },
   output: {
     path: path.resolve(__dirname, 'bin/js'),
-    filename: minimize ? 'myApp.bundle.min.js' : 'myApp.bundle.js',
-    library: 'myApp'
+    filename: minimize ? '[name].bundle.min.js' : '[name].bundle.js',
+    library: '[name]'
   },
   module: {
     loaders: [

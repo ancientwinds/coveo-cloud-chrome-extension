@@ -38,7 +38,11 @@ export class Application extends BasicComponent {
         } else if (Url.checkIfUrlLocationContains('outlook.office.com')) {
             this.watchInput('[autoid="_is_3"]', true);
         } else if (Url.checkIfUrlLocationContains('coveo.com')) {
-            this.watchInput('[form="coveo-dummy-form"]');
+            if (document.getElementById('searchBox')) {
+                this.watchInput('[id="searchBox"]');
+            } else {
+                this.watchInput('[form="coveo-dummy-form"]');
+            }
         } else if (Url.checkIfUrlLocationContains('www.amazon.com')) {
             this.watchInput('[name="field-keywords"]');
         } else if (Url.checkIfUrlLocationContains('html/popup.html')) {

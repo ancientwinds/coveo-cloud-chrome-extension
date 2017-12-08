@@ -1,24 +1,28 @@
 {
-  "name": "myApp",
+  "name": "coveothis",
   "version": "0.0.0",
   "description": "",
-  "homepage": "",
+  "homepage": "https://www.coveo.com",
   "author": {
-    "name": "FULLNAME",
-    "email": "FULLNAME@MAIL.com",
-    "url": ""
+    "name": "Jean-François Cloutier",
+    "email": "jfcloutier@coveo.com",
+    "url": "https://github.com/ancientwinds"
   },
   "files": [
     "myApp"
   ],
-  "main": "ps-incontact-search-ui/index.js",
+  "main": "myApp.js",
   "keywords": [
     ""
   ],
   "dependencies": {
+    "@types/jasmine": "^2.8.2",
     "@types/jquery": "3.2.15",
+    "atob-lite": "^2.0.0",
+    "btoa-lite": "^1.0.0",
     "chalk": "^2.1.0",
     "install": "0.10.1",
+    "jasmine": "^2.8.0",
     "jquery": "3.2.1",
     "jquery-ts": "2.1.1",
     "npm": "5.5.1",
@@ -26,7 +30,10 @@
     "webpack-dev-server": "1.16.5"
   },
   "devDependencies": {
+    "@types/chai": "^4.0.8",
+    "@types/mocha": "^2.2.44",
     "body-parser": "^1.15.2",
+    "chai": "^4.1.2",
     "colors": "^1.1.2",
     "ejs": "^2.5.5",
     "eslint": "^3.1.1",
@@ -61,11 +68,15 @@
     "gulp-strip-comments": "^2.4.3",
     "gulp-util": "^3.0.8",
     "gulp-zip": "^3.2.0",
+    "karma-typescript": "^3.0.8",
     "merge-stream": "^1.0.1",
+    "mocha": "^4.0.1",
+    "mocha-typescript": "^1.1.12",
     "pretty-typescript": "1.13.0",
     "require-dir": "^0.3.1",
     "run-sequence": "^1.2.2",
     "ts-loader": "^1.3.3",
+    "ts-node": "^3.3.0",
     "typescript": "^1.8.10",
     "underscore": "^1.8.3",
     "webpack": "^3.8.1",
@@ -76,7 +87,7 @@
     "build": "gulp",
     "dev": "gulp dev",
     "deploy": "gulp bundle && gulp bundle-sfdc && gulp deploy-sfdc",
-    "test": "gulp"
+    "test": "jasmine-ts './src/specs/**/*.spec.ts'"
   },
   "eslintConfig": {
     "extends": "xo-space",
