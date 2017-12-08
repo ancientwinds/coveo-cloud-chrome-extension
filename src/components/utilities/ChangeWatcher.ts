@@ -21,7 +21,11 @@ export class ChangeWatcher extends BasicComponent {
     }
 
     public executeCallback(): void {
-        this._callBack((document.querySelector(this._querySelector) as HTMLInputElement).value);
+        if ((document.querySelector(this._querySelector) as HTMLInputElement).value) {
+            this._currentValue = (document.querySelector(this._querySelector) as HTMLInputElement).value;
+        }
+
+        this._callBack(this._currentValue);
     }
 
     public watchForChanges(): void {

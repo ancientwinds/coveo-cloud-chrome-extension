@@ -15,7 +15,7 @@ export class Application extends BasicComponent {
     private _options: Options = new Options();
     private _popup: Popup = new Popup();
     private _background: Background = new Background();
-    private _changeWatcher: ChangeWatcher
+    private _changeWatcher: ChangeWatcher = null;
 
     constructor() {
         super('Application');
@@ -51,15 +51,21 @@ export class Application extends BasicComponent {
             this.watchInput('[name="q"]');
         }
 
-        if (!Url.checkIfUrlLocationContains('cloud.coveo.com/pages') && !Url.checkIfUrlLocationContains('html/popup.html')){
-            this.search('');
-        }
-
         document.addEventListener("visibilitychange", function () {
-            if (!document.hidden && context._changeWatcher) {
-                context._changeWatcher.executeCallback();
+            if (!document.hidden) {
+                context.executeSearch();
             }
         }, false);
+
+        this.executeSearch();
+    }
+
+    private executeSearch(): void {
+        if (this._changeWatcher) {
+            this._changeWatcher.executeCallback();
+        } else {
+            this.search('');
+        }
     }
 
     public watchInput(querySelector: string, ignoreActualElementExistence: boolean = false): void {
@@ -69,6 +75,8 @@ export class Application extends BasicComponent {
             this._changeWatcher = new ChangeWatcher(querySelector, function (searchQuery: string) { 
                 context.search(searchQuery);
             }, 200, !ignoreActualElementExistence); 
+        } else {
+            this.search('');
         }
     }
 
