@@ -23,7 +23,7 @@ describe('Components management', () => {
         component.unregister();
         should().not.exist(ComponentStore.getComponents().Item(component.getComponentId()));
     });
-
+    /*
     it('should btoa and stringify the dictionary' , () => {
         console.log(component.btoaAndStringify({'test':'this is a test'}));
     });
@@ -34,4 +34,5 @@ describe('Components management', () => {
         ComponentStore.execute(component.getComponentId(), 'unregister', component.btoaAndStringify({}));
         should().not.exist(ComponentStore.getComponents().Item(component.getComponentId()));
     });
+    */
 });
