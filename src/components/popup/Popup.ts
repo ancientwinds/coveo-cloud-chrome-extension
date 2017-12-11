@@ -22,7 +22,7 @@ export class Popup extends BasicComponent {
     private renderSearchPage(parent: string): void {
         super.render(parent, `
             <div id="search" class="CoveoSearchInterface" data-enable-history="true" data-design="new">
-            
+
             <div class="CoveoAnalytics"></div>
             <div class="coveo-search-section">
                 <div class="CoveoSettings"></div>
@@ -62,52 +62,6 @@ export class Popup extends BasicComponent {
                     <div class="CoveoDidYouMean"></div>
                     <div class="CoveoErrorReport" data-pop-up="false"></div>
                     <div class="CoveoResultList" data-layout="list" data-wait-animation="fade" data-auto-select-fields-to-include="true">
-                        <script id="Default" class="result-template" type="text/html" data-layout="list" >
-                            <div class="coveo-result-frame">
-                                <div class="coveo-result-row">
-                                <div class="coveo-result-cell" style="width:85px;text-align:center;padding-top:7px;">
-                                    <span class="CoveoIcon">
-                                    </span>
-                                    <div class="CoveoQuickview">
-                                    </div>
-                                </div>
-                                <div class="coveo-result-cell" style="padding-left:15px;">
-                                    <div class="coveo-result-row">
-                                    <div class="coveo-result-cell" style="font-size:18px;">
-                                        <a class="CoveoResultLink">
-                                        </a>
-                                    </div>
-                                    <div class="coveo-result-cell" style="width:120px; text-align:right; font-size:12px">
-                                        <span class="CoveoFieldValue" data-field="@date" data-helper="date">
-                                        </span>
-                                    </div>
-                                    </div>
-                                    <div class="coveo-result-row">
-                                    <div class="coveo-result-cell">
-                                        <span class="CoveoExcerpt">
-                                        </span>
-                                    </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="coveo-result-row">
-                                <div class="coveo-result-cell" style="width:85px;text-align:center">
-                                </div>
-                                <div class="coveo-result-cell" style="font-size:13px;padding-left: 15px;">
-                                    <table class="CoveoFieldTable">
-                                    <tbody>
-                                        <tr data-field="@author" data-caption="Author">
-                                        </tr>
-                                        <tr data-field="@source" data-caption="Source">
-                                        </tr>
-                                        <tr data-field="@language" data-caption="Language">
-                                        </tr>
-                                    </tbody>
-                                    </table>
-                                </div>
-                                </div>
-                            </div>
-                        </script>
                     </div>
                     <div class="CoveoPager"></div>
                     <div class="CoveoLogo"></div>
@@ -128,7 +82,9 @@ export class Popup extends BasicComponent {
                     restUri: `${Configuration.PLATFORM_URL}/rest/search`,
                     accessToken: message.userToken,
                     queryStringArguments: {
-                        organizationId: message.organizationId
+                        organizationId: message.organizationId,
+                        q: message.activeQuery,
+                        cq: 'NOT (@filetype=(Txt, .oleFile, Folder))'
                     }
                 });
 
