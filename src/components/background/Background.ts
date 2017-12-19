@@ -62,6 +62,8 @@ export class Background extends BasicComponent {
                 } else if (request.command == 'search') {
                     // TODO : do something with request.origin;
                     context.search(request.queryExpression);
+                } else if (request.command == 'isUserLoggedIn') {
+                    context.isUserLoggedIn(sendResponse);
                 }
 
                 return true; 
@@ -81,6 +83,27 @@ export class Background extends BasicComponent {
                 chrome.browserAction.setBadgeText({text: String(results.totalCount)});
             } else {
                 chrome.browserAction.setBadgeText({text: "..."});
+            }
+        }; 
+ 
+        xhttp.open('GET', url, true); 
+        xhttp.setRequestHeader('Authorization', `Bearer ${this._options.getUserToken()}`); 
+        xhttp.send(); 
+    }
+
+    private isUserLoggedIn(sendResponse: Function): void {
+        let url = `https://platformqa.cloud.coveo.com/rest/search/v2/?organizationId=${this._options.getOrganizationId()}&q=`;
+        let xhttp = new XMLHttpRequest();
+
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                sendResponse({
+                    isLoggedIn: true
+                });
+            } else {
+                sendResponse({
+                    isLoggedIn: false
+                });
             }
         }; 
  

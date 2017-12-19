@@ -41,8 +41,6 @@ export class ChangeWatcher extends BasicComponent {
                 ComponentStore.execute(context._guid, 'watchForChanges', context.btoaAndStringify({}))
             }, this._watchIntervalInMiliseconds);
         } else  {
-            console.warn(`ChangeWatcher: Element ${this._querySelector} was not found on the page.`);
-
             if (this._clearIntervalOnElementNotFound) {
                 clearTimeout(this._timeout);
             } else {

@@ -51,8 +51,12 @@ export class BasicComponent {
         ComponentStore.unregisterComponent(this);
     }
 
-    public remove(): void {
+    public clear(): void {
         $('#' + this._guid).remove();
-        ComponentStore.unregisterComponent(this);
+    }
+
+    public remove(): void {
+        this.clear();
+        this.unregister();
     }
 }
