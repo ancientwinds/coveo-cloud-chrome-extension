@@ -1,32 +1,34 @@
+html, body {
+    background-color: white;
+    overflow: hidden;
+}
 body {
     width: 765px;
     height: 580px;
-
-    background-color: white;
 }
 
-.coveo-logout {
-    display: none; 
+.CoveoChromeExtension, .CoveoChromeExtension #search {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
 }
 
-.ResultList .ResultListWrap {
-    position: fixed;
-    top: 00px;
-    bottom: 0px;
-    left: 0px;
-    right: 0px;
+.CoveoChromeExtension #search {
+    display: flex!important; /* !important because JSUI updates the style explicitly to display:block; */
 }
 
-.CoveoChromeExtension .CoveoChromeExtensionHeader {
-    position: fixed;
-    top: 0px;
-    width: 100%;
-    background-color: white;
-    z-index: 10;
+.CoveoChromeExtensionHeader .coveo-search-section {
+    margin: 10px auto;
+}
+
+.CoveoChromeExtension .coveo-facet-column {
+    display: none;
 }
 
 .CoveoChromeExtension .coveo-main-section {
-    margin-top: 115px;
+    height: 100%;
+    overflow: auto;
 }
 
 .CoveoChromeExtension .CoveoSearchInterface .coveo-search-section .CoveoSearchbox .CoveoSearchButton {
@@ -34,7 +36,9 @@ body {
     border: none;
 }
 
-.CoveoChromeExtension .CoveoSearchInterface .coveo-search-section .CoveoSearchbox .magic-box .magic-box-input {
+.CoveoChromeExtension .CoveoSearchInterface .coveo-search-section .CoveoSearchbox .magic-box .magic-box-input,
+.CoveoChromeExtension .CoveoSearchInterface .coveo-search-section .CoveoSearchbox .magic-box .magic-box-clear,
+.CoveoChromeExtension .CoveoSearchInterface .coveo-search-section .CoveoSearchbox {
     background-color: #F6F6F6;
 }
 
@@ -42,29 +46,18 @@ body {
     border: none;
 }
 
-.CoveoChromeExtension .CoveoSearchInterface .coveo-search-section .CoveoSearchbox .magic-box .magic-box-clear  {
-    background-color: #F6F6F6;
-    background: #F6F6F6;
-}
-
 .CoveoChromeExtension .CoveoSearchInterface .coveo-search-section .CoveoSearchbox {
-    background-color: #F6F6F6;
     margin-right: 0px;
     border: none;
 }
 
 .CoveoChromeExtension .CoveoSearchInterface .coveo-results-header {
-    position: fixed;
-    top: 70px;
-    width: 100%;
     flex-direction: row-reverse;
 }
 
-.CoveoChromeExtension .CoveoSearchInterface .coveo-summary-section {
-    position: absolute;
-    top: 80px;
-    left: 12px;
-}
+
+
+
 
 .CoveoChromeExtension .CoveoSearchInterface.coveo-small-facets .coveo-dropdown-header-wrapper {
     justify-content: center;

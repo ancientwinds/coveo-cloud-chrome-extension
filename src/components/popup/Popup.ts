@@ -27,7 +27,7 @@ export class Popup extends BasicComponent {
             } catch (e) {
                 extensionId = 'egcobhndnfihpdffpfmmebdojcbnfpee';
             }
-            
+
 
             chrome.tabs.create({'url': `chrome://extensions/?options=${extensionId}` } )
         })
@@ -57,51 +57,45 @@ export class Popup extends BasicComponent {
                         </div>
                     </div>
                     <div class="coveo-results-header">
-                        <div class="coveo-result-layout-section">
-                            <span class="CoveoResultLayout"></span>
-                        </div>
                         <div class="coveo-sort-section">
                             <span class="CoveoSort" data-sort-criteria="relevancy" data-caption="Relevance"></span>
                             <span class="CoveoSort" data-sort-criteria="date descending,date ascending" data-caption="Date"></span>
                         </div>
                     </div>
                 </div>
-                <div class="coveo-main-section">
+                <div id="coveo-main-section" class="coveo-main-section">
                     <div class="coveo-results-column">
                         <div class="CoveoTriggers"></div>
                         <div class="CoveoHiddenQuery"></div>
                         <div class="CoveoDidYouMean"></div>
                         <div class="CoveoErrorReport" data-pop-up="false"></div>
-                        <div class="CoveoResultList" data-layout="list" data-enable-infinite-scroll="true" data-wait-animation="fade" data-auto-select-fields-to-include="true">
-                            <script id="Default" class="result-template" type="text/html" data-layout="list" >
+                        <div class="CoveoResultList" data-layout="list" data-enable-infinite-scroll="true" data-infinite-scroll-container-selector='#coveo-main-section' data-wait-animation="fade" data-auto-select-fields-to-include="true">
+                            <script id="Default" class="result-template" type="text/html" data-layout="list">
+
                                 <div class="coveo-result-frame">
                                     <div class="coveo-result-row">
                                     <div class="coveo-result-cell" style="width:40px;text-align:center;">
-                                        <span class="CoveoIcon">
-                                        </span>
+                                        <span class="CoveoIcon"></span>
                                     </div>
                                     <div class="coveo-result-cell" style="padding-left:15px;">
                                         <div class="coveo-result-row">
                                             <div class="coveo-result-cell" style="font-size:18px;">
-                                                <a class="CoveoResultLink" target="_blank">
-                                                </a>
+                                                <a class="CoveoResultLink" target="_blank"></a>
                                             </div>
                                         </div>
                                         <div class="coveo-result-row">
                                             <div class="coveo-result-cell" style="width:120px; text-align:left; font-size:12px">
-                                                <span class="CoveoFieldValue" data-field="@date" data-helper="date">
-                                                </span>
+                                                <span class="CoveoFieldValue" data-field="@date" data-helper="date"></span>
                                                 &nbsp;
-                                                <span class="CoveoFieldValue" data-field="@author">
-                                                </span>
+                                                <span class="CoveoFieldValue" data-field="@author"></span>
                                             </div>
                                         </div>
                                         <div class="coveo-result-row">
                                         <div class="coveo-result-cell">
-                                            <span class="CoveoExcerpt">
-                                            </span>
+                                            <span class="CoveoExcerpt"></span>
                                         </div>
                                         </div>
+                                    </div>
                                     </div>
                                 </div>
                             </script>
@@ -109,7 +103,6 @@ export class Popup extends BasicComponent {
                     </div>
                 </div>
                 </div>
-            </div>
         `);
 
         Coveo.init(document.querySelector('#search'));
@@ -133,10 +126,10 @@ export class Popup extends BasicComponent {
                                         organizationId: message.organizationId
                                     }
                                 });
-                
+
                                 Coveo.Analytics.options.endpoint.defaultValue = PlatformUrls.getAnalyticsUrl(message.environment);
                                 Coveo.Analytics.options.organization.defaultValue = message.organizationId;
-            
+
                                 location.hash = `q=${message.activeQuery}`;
                                 context.renderSearchPage(parent);
                             } else {
