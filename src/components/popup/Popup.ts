@@ -110,22 +110,33 @@ export class Popup extends BasicComponent {
 
     public render(parent: string): void {
         let context: Popup = this;
-        let message = chrome.runtime.sendMessage({command: 'getActiveQueryAndOptions'},
-            function (message: any) {
-                if (message.organizationId) {
-                    context._defaultEndpoint = Coveo.SearchEndpoint.endpoints["default"] = new Coveo.SearchEndpoint({
-                        restUri: `${PlatformUrls.getPlatformUrl(message.environment)}/rest/search`,
-                        accessToken: message.userToken,
-                        queryStringArguments: {
-                            organizationId: message.organizationId
+        let userIsLoggedIn = chrome.runtime.sendMessage(
+            {
+                command: 'isUserLoggedIn'
+            },
+            function (userIsLoggedInMessage: any) {
+                if (userIsLoggedInMessage.userIsLoggedIn) {
+                    let message = chrome.runtime.sendMessage({command: 'getActiveQueryAndOptions'},
+                        function (message: any) {
+                            if (message.organizationId) {
+                                context._defaultEndpoint = Coveo.SearchEndpoint.endpoints["default"] = new Coveo.SearchEndpoint({
+                                    restUri: `${PlatformUrls.getPlatformUrl(message.environment)}/rest/search`,
+                                    accessToken: message.userToken,
+                                    queryStringArguments: {
+                                        organizationId: message.organizationId
+                                    }
+                                });
+                
+                                Coveo.Analytics.options.endpoint.defaultValue = PlatformUrls.getAnalyticsUrl(message.environment);
+                                Coveo.Analytics.options.organization.defaultValue = message.organizationId;
+            
+                                location.hash = `q=${message.activeQuery}`;
+                                context.renderSearchPage(parent);
+                            } else {
+                                context.renderNotLoggedIn(parent);
+                            }
                         }
-                    });
-    
-                    Coveo.Analytics.options.endpoint.defaultValue = PlatformUrls.getAnalyticsUrl(message.environment);
-                    Coveo.Analytics.options.organization.defaultValue = message.organizationId;
-
-                    location.hash = `q=${message.activeQuery}`;
-                    context.renderSearchPage(parent);
+                    );
                 } else {
                     context.renderNotLoggedIn(parent);
                 }
