@@ -203,6 +203,7 @@ export class Options extends BasicComponent {
                 function (message) {
                     context.saveOptions();
                     context.clearOrganizations();
+                    (document.getElementById('loginFrame') as HTMLIFrameElement).contentWindow.location.reload();
                 }
             );
         });

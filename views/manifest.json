@@ -3,7 +3,7 @@
     "name": "Coveo Search Chrome Extension",
     "short_name": "CoveoSearch",
     "description": "Adds a Coveo icon to the tool bar. Click on it to get more results as you search the web.",
-    "version": "0.0.2",
+    "version": "0.0.4",
     "homepage_url": "https://github.com/ancientwinds/coveo-cloud-chrome-extension",
     "options_ui": {
       "page": "/html/options.html",

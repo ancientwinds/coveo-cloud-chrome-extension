@@ -20,7 +20,14 @@ export class Popup extends BasicComponent {
         `);
 
         document.getElementById('optionPageLink').addEventListener('click', function () {
-            let extensionId: string = location.href.match('(?<=://)(.*)(?=/html/popup.html)')[0];
+            let extensionId: string;
+
+            try {
+                extensionId = location.href.match('(?<=://)(.*)(?=/html/popup.html)')[0];
+            } catch (e) {
+                extensionId = 'egcobhndnfihpdffpfmmebdojcbnfpee';
+            }
+            
 
             chrome.tabs.create({'url': `chrome://extensions/?options=${extensionId}` } )
         })
