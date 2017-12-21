@@ -10,15 +10,12 @@ export class ComponentStore {
             component.getComponentId(),
             component
         );
-
-        // console.log(`Component ${component.getComponentId()} of type ${component.getClassName()} successfully registered.`);
     }
 
     public static unregisterComponent(component: BasicComponent): void {
         ComponentStore._components.Remove(
             component.getComponentId()
         );
-        // console.log(`Component ${component.getComponentId()} of type ${component.getClassName()} successfully UNregistered.`);
     }
 
     public static getComponents(): Dictionary<BasicComponent> {
@@ -29,11 +26,7 @@ export class ComponentStore {
         if (ComponentStore._components.ContainsKey(componentId)) {
             if (ComponentStore._components.Item(componentId)[functionToCall]) {
                 ComponentStore._components.Item(componentId)[functionToCall](JSON.parse(atob(args)));
-            } else {
-                // console.log(`Function ${functionToCall} was not found in the component ${componentId}.`);
             }
-        } else {
-            // console.log(`Component ${componentId} was not found in the component store.`);
         }
     }
 }

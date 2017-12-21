@@ -32,14 +32,18 @@ export class ChangeWatcher extends BasicComponent {
         let context: ChangeWatcher = this;
         
         if (document.querySelector(this._querySelector)) {
-            if ((document.querySelector(this._querySelector) as HTMLInputElement).value != this._currentValue) {
+            try {
+                if ((document.querySelector(this._querySelector) as HTMLInputElement).value != this._currentValue) {
                     this._currentValue = (document.querySelector(this._querySelector) as HTMLInputElement).value;
                     this._callBack((document.querySelector(this._querySelector) as HTMLInputElement).value);
-            }
+                }
 
-            this._timeout= setTimeout(function() {
-                ComponentStore.execute(context._guid, 'watchForChanges', context.btoaAndStringify({}))
-            }, this._watchIntervalInMiliseconds);
+                this._timeout= setTimeout(function() {
+                    ComponentStore.execute(context._guid, 'watchForChanges', context.btoaAndStringify({}))
+                }, this._watchIntervalInMiliseconds);
+            } catch (e) {
+                //
+            }
         } else  {
             if (this._clearIntervalOnElementNotFound) {
                 clearTimeout(this._timeout);

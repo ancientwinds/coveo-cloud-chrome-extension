@@ -3,7 +3,7 @@ declare let Coveo: any;
 
 import { BasicComponent } from '../BasicComponent';
 import { ComponentStore } from '../ComponentStore';
-import { Configuration } from '../options/Configuration';
+import { PlatformUrls } from '../options/PlatformUrls';
 
 export class Popup extends BasicComponent {
     private _hostedSearchPage: string = null;
@@ -114,14 +114,14 @@ export class Popup extends BasicComponent {
             function (message: any) {
                 if (message.organizationId) {
                     context._defaultEndpoint = Coveo.SearchEndpoint.endpoints["default"] = new Coveo.SearchEndpoint({
-                        restUri: `${Configuration.PLATFORM_URL}/rest/search`,
+                        restUri: `${PlatformUrls.getPlatformUrl(message.environment)}/rest/search`,
                         accessToken: message.userToken,
                         queryStringArguments: {
                             organizationId: message.organizationId
                         }
                     });
     
-                    Coveo.Analytics.options.endpoint.defaultValue = Configuration.ANALYTICS_URL;
+                    Coveo.Analytics.options.endpoint.defaultValue = PlatformUrls.getAnalyticsUrl(message.environment);
                     Coveo.Analytics.options.organization.defaultValue = message.organizationId;
 
                     location.hash = `q=${message.activeQuery}`;

@@ -9,13 +9,14 @@ import { Popup } from './components/popup/Popup';
 import { Background } from './components/background/Background';
 import { ChangeWatcher } from './components/utilities/ChangeWatcher';
 import { ComponentStore } from './components/ComponentStore';
+import { PlatformUrls } from './components/options/PlatformUrls';
 
 export class Application extends BasicComponent {
-    private _authentication: Authentication = new Authentication();
-    private _options: Options = new Options();
-    private _popup: Popup = new Popup();
-    private _background: Background = new Background();
-    private _changeWatcher: ChangeWatcher = null;
+    private _authentication: Authentication;
+    private _options: Options;
+    private _popup: Popup;
+    private _background: Background;
+    private _changeWatcher: ChangeWatcher;
 
     constructor() {
         super('Application');
@@ -46,6 +47,7 @@ export class Application extends BasicComponent {
         } else if (Url.checkIfUrlLocationContains('www.amazon.com')) {
             this.watchInput('[name="field-keywords"]');
         } else if (Url.checkIfUrlLocationContains('html/popup.html')) {
+            this._popup = new Popup();
             this._popup.render('body');
         } else if (!Url.checkIfUrlLocationContains('cloud.coveo.com/pages')) {
             this.watchInput('[name="q"]');
@@ -91,19 +93,32 @@ export class Application extends BasicComponent {
     public render(): void {
         this.renderBasicComponents();
 
-        if (Url.checkIfUrlLocationContains('/login.html')) {
-            this._authentication.render(`#${this._guid}`);
-        } else if (Url.checkIfUrlLocationContains('/o2c.html')) {
-            this._authentication.processOAuthReturn();
-        } else if (Url.checkIfUrlLocationContains('/options.html')) {
-            this._options.render(`#${this._guid}`);
-            this._options.loadOptions();
-        } else if (Url.checkIfUrlLocationContains('/background.html')) {
-            this._background.loadOptions();
-            this._background.listenForMessages();
-        } else {
-            this.bindSearch();
-        }
+        let context: Application = this;
+
+        chrome.storage.local.get(
+            {
+                'coveoforgooglecloudsearch_environment': 'production'
+            }, 
+            function(items) {
+                if (Url.checkIfUrlLocationContains('/login.html')) {
+                    context._authentication = new Authentication();
+                    context._authentication.render(`#${context._guid}`);
+                } else if (Url.checkIfUrlLocationContains('/o2c.html')) {
+                    context._authentication = new Authentication();
+                    context._authentication.processOAuthReturn();
+                } else if (Url.checkIfUrlLocationContains('/options.html')) {
+                    context._options = new Options();
+                    context._options.render(`#${context._guid}`);
+                } else if (Url.checkIfUrlLocationContains('/background.html')) {
+                    context._background = new Background();
+                    context._background.loadOptions(function () {
+                        context._background.listenForMessages();
+                    });
+                } else {
+                    context.bindSearch();
+                }
+            }
+        );
     }
 }
 
