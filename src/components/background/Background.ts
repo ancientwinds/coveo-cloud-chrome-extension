@@ -4,7 +4,7 @@ import { BasicComponent } from '../BasicComponent';
 import { ComponentStore } from '../ComponentStore';
 import { Authentication } from '../options/Authentication';
 import { Options } from '../options/Options';
-import { PlatformUrls } from '../options/PlatformUrls'
+import { PlatformUrls } from '../options/PlatformUrls';
 
 export class Background extends BasicComponent {
     private _constantQueryExpression: string = 'NOT (@filetype=(Txt, .oleFile, Folder))';
@@ -22,21 +22,19 @@ export class Background extends BasicComponent {
 
 
     public loadOptions(callback: Function = null): void {
-        let context: Background = this;
-        
         chrome.storage.local.get(
             {
                 'coveoforgooglecloudsearch_environment': 'production',
                 'coveoforgooglecloudsearch_usertoken': null,
                 'coveoforgooglecloudsearch_organization': null
             }, 
-            function(items) {
-                context._environment = items['coveoforgooglecloudsearch_environment'];
-                if (!context._environment) {
-                    context._environment = 'production';
+            (items) => {
+                this._environment = items['coveoforgooglecloudsearch_environment'];
+                if (!this._environment) {
+                    this._environment = 'production';
                 }
-                context._organizationId = items['coveoforgooglecloudsearch_organization'];
-                context._userToken = items['coveoforgooglecloudsearch_usertoken'];
+                this._organizationId = items['coveoforgooglecloudsearch_organization'];
+                this._userToken = items['coveoforgooglecloudsearch_usertoken'];
 
                 if (callback) {
                     callback();
@@ -47,12 +45,11 @@ export class Background extends BasicComponent {
 
     public validateOptions(): void {
         if (this._userToken && this._environment) {
-            let context: Background = this;
-            context._authentication.validateToken(this._environment, this._userToken, function(xhttp: any) {
+            this._authentication.validateToken(this._environment, this._userToken, (xhttp: any) => {
                 if (xhttp.status === 200) {
-                    context.search(context._activeQuery);
+                    this.search(this._activeQuery);
                 } else {
-                    context.updateLabel('...');
+                    this.updateLabel('...');
                 }
             });
         } else {
@@ -66,42 +63,40 @@ export class Background extends BasicComponent {
 
 
     public listenForMessages(): void {
-        let context: Background = this;
-
         chrome.runtime.onMessage.addListener(
-            function(request, sender, sendResponse) {
+            (request, sender, sendResponse) => {
                 if (request.command == 'updateLabel') {
                     chrome.browserAction.setBadgeText({text: request.labelText});
                 } else if (request.command == 'getActiveQueryAndOptions') {
                     sendResponse({
-                        activeQuery: context._activeQuery,
-                        environment: context._environment,
-                        organizationId: context._organizationId,
-                        userToken: context._userToken
+                        activeQuery: this._activeQuery,
+                        environment: this._environment,
+                        organizationId: this._organizationId,
+                        userToken: this._userToken
                     });
                 } else if (request.command == 'loadOptions') {
-                    context.loadOptions(function () {
+                    this.loadOptions(() => {
                         sendResponse({
-                            environment: context._environment,
-                            organizationId: context._organizationId,
-                            userToken: context._userToken
+                            environment: this._environment,
+                            organizationId: this._organizationId,
+                            userToken: this._userToken
                         });
                     });
                 } else if (request.command == 'search') {
                     // TODO : do something with request.origin?;
-                    context.search(request.queryExpression);
+                    this.search(request.queryExpression);
                 } else if (request.command == 'isUserLoggedIn') {
-                    context.isUserLoggedIn(function (message) {
+                    this.isUserLoggedIn((message) => {
                         sendResponse(message);
                     });
                 } else if (request.command == 'saveOptions') {
-                    context.saveOptions(request.environment, request.organizationId, sendResponse);
+                    this.saveOptions(request.environment, request.organizationId, sendResponse);
                 } else if (request.command == 'saveUserToken') {
-                    context.saveUserToken(request.userToken, function (message: any) {
+                    this.saveUserToken(request.userToken, (message: any) => {
                         sendResponse(message);
                     });
                 } else if (request.command == 'logout') {
-                    context.saveUserToken(null, function (message: any) {
+                    this.saveUserToken(null, (message: any) => {
                         sendResponse(message);
                     });
                 }
@@ -110,38 +105,36 @@ export class Background extends BasicComponent {
     }
 
     private saveUserToken(userToken: string, callback: Function): void {
-        let context: Background = this;
         // Save it using the Chrome extension storage API.
         chrome.storage.local.set(
             {
                 'coveoforgooglecloudsearch_usertoken': userToken
             }, 
-            function() {
-                context._userToken = userToken;
+            () => {
+                this._userToken = userToken;
                 callback({
-                    environment: context._environment,
-                    organizationId: context._organizationId,
-                    userToken: context._userToken
+                    environment: this._environment,
+                    organizationId: this._organizationId,
+                    userToken: this._userToken
                 });
             }
         );
     }
 
     private saveOptions(environment: string, organizationId: string, sendResponse: Function): void {
-        let context: Background = this;
         // Save it using the Chrome extension storage API.
         chrome.storage.local.set(
             {
                 'coveoforgooglecloudsearch_environment': environment,
                 'coveoforgooglecloudsearch_organization': organizationId,
             }, 
-            function() {
-                context._environment = environment;
-                context._organizationId = organizationId;
+            () => {
+                this._environment = environment;
+                this._organizationId = organizationId;
                 sendResponse({
-                    environment: context._environment,
-                    organizationId: context._organizationId,
-                    userToken: context._userToken
+                    environment: this._environment,
+                    organizationId: this._organizationId,
+                    userToken: this._userToken
                 });
             }
         );
@@ -173,6 +166,7 @@ export class Background extends BasicComponent {
         xhttp.open('GET', PlatformUrls.getPlatformUrl(this._environment) + '/rest/oauth2clients/Swagger', true);
         xhttp.setRequestHeader('Content-type', 'application/json');
         xhttp.setRequestHeader('Authorization', 'Bearer ' + this._userToken);
+
         let context: Background = this;
         xhttp.onload = function () {
             if (this.readyState == 4 && this.status == 200) {
@@ -189,8 +183,5 @@ export class Background extends BasicComponent {
         };
 
         xhttp.send();
-    }
-
-    public render(parent: string): void {
     }
 }

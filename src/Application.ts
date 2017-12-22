@@ -30,8 +30,6 @@ export class Application extends BasicComponent {
     }
 
     public bindSearch() {
-        let context: Application = this;
-
         if (Url.checkIfUrlLocationContains('cloudsearch.google.com')) {
             this.watchInput('[data-placeholder="Search"] input:nth-child(2)', true);
         } else if (Url.checkIfUrlLocationContains('drive.google.com')) {
@@ -53,9 +51,9 @@ export class Application extends BasicComponent {
             this.watchInput('[name="q"]');
         }
 
-        document.addEventListener("visibilitychange", function () {
+        document.addEventListener("visibilitychange", () => {
             if (!document.hidden) {
-                context.executeSearch();
+                this.executeSearch();
             }
         }, false);
 
@@ -73,9 +71,8 @@ export class Application extends BasicComponent {
     public watchInput(querySelector: string, ignoreActualElementExistence: boolean = false): void {
         let searchBox: HTMLInputElement = (document.querySelector(querySelector) as HTMLInputElement);
         if (searchBox || ignoreActualElementExistence) {
-            let context: Application = this;
-            this._changeWatcher = new ChangeWatcher(querySelector, function (searchQuery: string) { 
-                context.search(searchQuery);
+            this._changeWatcher = new ChangeWatcher(querySelector, (searchQuery: string) => { 
+                this.search(searchQuery);
             }, 200, !ignoreActualElementExistence); 
         } else {
             this.search('');
@@ -93,29 +90,27 @@ export class Application extends BasicComponent {
     public render(): void {
         this.renderBasicComponents();
 
-        let context: Application = this;
-
         chrome.storage.local.get(
             {
                 'coveoforgooglecloudsearch_environment': 'production'
             }, 
-            function(items) {
+            (items) => {
                 if (Url.checkIfUrlLocationContains('/login.html')) {
-                    context._authentication = new Authentication();
-                    context._authentication.render(`#${context._guid}`);
+                    this._authentication = new Authentication();
+                    this._authentication.render(`#${this._guid}`);
                 } else if (Url.checkIfUrlLocationContains('/o2c.html')) {
-                    context._authentication = new Authentication();
-                    context._authentication.processOAuthReturn();
+                    this._authentication = new Authentication();
+                    this._authentication.processOAuthReturn();
                 } else if (Url.checkIfUrlLocationContains('/options.html')) {
-                    context._options = new Options();
-                    context._options.render(`#${context._guid}`);
+                    this._options = new Options();
+                    this._options.render(`#${this._guid}`);
                 } else if (Url.checkIfUrlLocationContains('/background.html')) {
-                    context._background = new Background();
-                    context._background.loadOptions(function () {
-                        context._background.listenForMessages();
+                    this._background = new Background();
+                    this._background.loadOptions(() => {
+                        this._background.listenForMessages();
                     });
                 } else {
-                    context.bindSearch();
+                    this.bindSearch();
                 }
             }
         );
@@ -124,7 +119,7 @@ export class Application extends BasicComponent {
 
 export let _application: Application = null;
 
-$(document).ready(function () {
+$(document).ready(() => {
     _application = new Application();
     _application.render();
 });

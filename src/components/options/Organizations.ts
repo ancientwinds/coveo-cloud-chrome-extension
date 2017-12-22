@@ -11,7 +11,7 @@ export class Organizations {
         xhttp.open('GET', url, true);
         xhttp.setRequestHeader('Content-type', 'application/json');
         xhttp.setRequestHeader('Authorization', 'Bearer ' + userToken);
-        xhttp.onload = function () {
+        xhttp.onload = () => {
             callback(JSON.parse(xhttp.response));
         };
 

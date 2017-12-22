@@ -19,7 +19,7 @@ export class Popup extends BasicComponent {
             Your are not logged in. <a id="optionPageLink" href="#">Click here to login</a>. NOTE: The extension option page will open in a new tab.
         `);
 
-        document.getElementById('optionPageLink').addEventListener('click', function () {
+        document.getElementById('optionPageLink').addEventListener('click', () => {
             let extensionId: string;
 
             try {
@@ -105,17 +105,16 @@ export class Popup extends BasicComponent {
     }
 
     public render(parent: string): void {
-        let context: Popup = this;
-        let userIsLoggedIn = chrome.runtime.sendMessage(
+        chrome.runtime.sendMessage(
             {
                 command: 'isUserLoggedIn'
             },
-            function (userIsLoggedInMessage: any) {
+            (userIsLoggedInMessage: any) => {
                 if (userIsLoggedInMessage.userIsLoggedIn) {
-                    let message = chrome.runtime.sendMessage({command: 'getActiveQueryAndOptions'},
-                        function (message: any) {
+                    chrome.runtime.sendMessage({command: 'getActiveQueryAndOptions'},
+                        (message: any) => {
                             if (message.organizationId) {
-                                context._defaultEndpoint = Coveo.SearchEndpoint.endpoints["default"] = new Coveo.SearchEndpoint({
+                                this._defaultEndpoint = Coveo.SearchEndpoint.endpoints["default"] = new Coveo.SearchEndpoint({
                                     restUri: `${PlatformUrls.getPlatformUrl(message.environment)}/rest/search`,
                                     accessToken: message.userToken,
                                     queryStringArguments: {
@@ -127,14 +126,14 @@ export class Popup extends BasicComponent {
                                 Coveo.Analytics.options.organization.defaultValue = message.organizationId;
 
                                 location.hash = `q=${message.activeQuery}`;
-                                context.renderSearchPage(parent);
+                                this.renderSearchPage(parent);
                             } else {
-                                context.renderNotLoggedIn(parent);
+                                this.renderNotLoggedIn(parent);
                             }
                         }
                     );
                 } else {
-                    context.renderNotLoggedIn(parent);
+                    this.renderNotLoggedIn(parent);
                 }
             }
         );

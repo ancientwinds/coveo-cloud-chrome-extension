@@ -21,7 +21,7 @@ export class Authentication  extends BasicComponent {
     public getUserToken(callback: Function): void {
         chrome.storage.local.get(
             ['coveoforgooglecloudsearch_usertoken'], 
-            function(items) {
+            (items) => {
                 callback(items['coveoforgooglecloudsearch_usertoken']);
             }
         );
@@ -33,25 +33,24 @@ export class Authentication  extends BasicComponent {
         redirect_uri = redirect_uri.replace('login.html', 'o2c.html');
         redirect_uri = encodeURIComponent(redirect_uri);
 
-        let context = this;
-        let removeToken = chrome.runtime.sendMessage(
+        chrome.runtime.sendMessage(
             {
                 command: 'saveUserToken',
                 userToken: null
             },
-            function (removeTokenResponse: any) {
-                let message = chrome.runtime.sendMessage({command: 'getActiveQueryAndOptions'},
-                    function (message: any) {
+            (removeTokenResponse: any) => {
+                chrome.runtime.sendMessage({command: 'getActiveQueryAndOptions'},
+                    (message: any) => {
                         window.open(`${PlatformUrls.getPlatformUrl(message.environment)}/oauth/authorize?response_type=token&redirect_uri=${redirect_uri}&realm=Platform&client_id=Swagger&scope=full&state=oauth2`);
         
                         // As all the pages are opened in an incognito mode, we need to validate if the login occured...
-                        Authentication._loginValidationTimer = setInterval(function() {
+                        Authentication._loginValidationTimer = setInterval(() => {
                             let message = chrome.runtime.sendMessage({command: 'getActiveQueryAndOptions'},
-                                function (message: any) {
-                                    if (context._lastToken != message.userToken) {
+                                (message: any) => {
+                                    if (this._lastToken != message.userToken) {
                                         let auth: Authentication = new Authentication();
-                                        context._lastToken = message.userToken;
-                                        auth.validateToken(message.environment, message.userToken, context.afterTokenValidation);
+                                        this._lastToken = message.userToken;
+                                        auth.validateToken(message.environment, message.userToken, this.afterTokenValidation);
                                     }
                                 }
                             );
@@ -68,7 +67,7 @@ export class Authentication  extends BasicComponent {
                 command: 'saveUserToken',
                 userToken: null
             },
-            function (message) {
+            (message) => {
                 $('#validToken').hide();
                 $('#invalidToken').show();
             }
@@ -100,8 +99,8 @@ export class Authentication  extends BasicComponent {
             {
                 command: "loadOptions"
             },
-            function (message) {
-
+            () => {
+                // Nothing to do here.
             }
         );
     }
@@ -114,7 +113,7 @@ export class Authentication  extends BasicComponent {
                 command: "saveUserToken",
                 userToken: userToken
             },
-            function (message) {
+            () => {
                 window.close();
             }
         );
@@ -132,20 +131,17 @@ export class Authentication  extends BasicComponent {
             </div>
         `);
 
-        let context: Authentication = this;
-
-        document.getElementById('loginButton').addEventListener('click', function () {
-            ComponentStore.execute(context._guid, 'login', context.btoaAndStringify({}));
+        document.getElementById('loginButton').addEventListener('click', () => {
+            this.login();
         });
 
-        document.getElementById('logoutButton').addEventListener('click', function () {
-            ComponentStore.execute(context._guid, 'logout', context.btoaAndStringify({}));
+        document.getElementById('logoutButton').addEventListener('click', () => {
+            this.logout();
         });
 
-
-        let message = chrome.runtime.sendMessage({command: 'getActiveQueryAndOptions'},
-            function (message: any) {
-                context.validateToken(message.environment, message.userToken, context.afterTokenValidation);
+        chrome.runtime.sendMessage({command: 'getActiveQueryAndOptions'},
+            (message: any) => {
+                this.validateToken(message.environment, message.userToken, this.afterTokenValidation);
             }
         );
     }

@@ -1,27 +1,21 @@
 export module PlatformUrls {
     export function getPlatformUrl(environment: string): string {
-        switch (environment.toLowerCase()) {
-            case "production":
-                return 'https://platform.cloud.coveo.com';
-            case "qa":
-                return 'https://platformqa.cloud.coveo.com';
-            case "hipaa":
-                return 'https://platformhipaa.cloud.coveo.com';
-            default:
-                return 'https://platform.cloud.coveo.com';
+        const PLATFORMS = {
+            'production': 'https://platform.cloud.coveo.com',
+            'qa': 'https://platformqa.cloud.coveo.com',
+            'hipaa': 'https://platformhipaa.cloud.coveo.com'
         }
+
+        return PLATFORMS[environment.toLowerCase()] || 'https://platform.cloud.coveo.com';
     }
 
     export function getAnalyticsUrl(environment: string): string {
-        switch (environment.toLowerCase()) {
-            case "production":
-                return 'https://usageanalytics.coveo.com';
-            case "qa":
-                return 'https://usageanalyticsstaging.coveo.com';
-            case "hipaa":
-                return 'https://usageanalyticshipaa.cloud.coveo.com';
-            default:
-                return 'https://usageanalytics.coveo.com';
+        const ANALYTICS = {
+            'production': 'https://usageanalytics.coveo.com',
+            'qa': 'https://usageanalyticsstaging.coveo.com',
+            'hipaa': 'https://usageanalyticshipaa.cloud.coveo.com'
         }
+
+        return ANALYTICS[environment.toLowerCase()] || 'https://usageanalytics.coveo.com';
     }
 }

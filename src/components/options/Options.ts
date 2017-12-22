@@ -13,7 +13,6 @@ export class Options extends BasicComponent {
 
     constructor() {
         super ('Options');
-
     }
 
     /*
@@ -21,14 +20,14 @@ export class Options extends BasicComponent {
     */
     public saveOptions(): void {
         document.getElementById('messages').innerHTML = 'Saving...';
-        let message = chrome.runtime.sendMessage(
+        chrome.runtime.sendMessage(
             {
                 command: 'saveOptions',
                 environment: this._environment,
                 organizationId: this._organizationId
-            }, function (message) {
+            }, (message) => {
                 document.getElementById('messages').innerHTML = 'Saved!';
-                setTimeout(function () {
+                setTimeout(() => {
                     document.getElementById('messages').innerHTML = '';
                 }, 1000)
             }
@@ -40,20 +39,18 @@ export class Options extends BasicComponent {
     }
 
     public validateOptions() {
-        let context: Options = this;
-
         let message = chrome.runtime.sendMessage({command: 'getActiveQueryAndOptions'},
-            function (message: any) {
-                if (message.userToken != context._userToken) {
-                    context._userToken = message.userToken;
+            (message: any) => {
+                if (message.userToken != this._userToken) {
+                    this._userToken = message.userToken;
                     let auth: Authentication = new Authentication();
                     auth.unregister();
     
                     auth.validateToken(
                         message.environment,
                         message.userToken,
-                        function(xhttp: any) {
-                            context.afterTokenValidation(xhttp);
+                        (xhttp: any) => {
+                            this.afterTokenValidation(xhttp);
                         }
                     );
                 }
@@ -62,11 +59,7 @@ export class Options extends BasicComponent {
     }
 
     public afterTokenValidation(xhttp): void {
-        if (xhttp.readyState == 4 && xhttp.status == "200") {
-
-        } else {
-            let context: Options = this;
-
+        if (!(xhttp.readyState == 4 && xhttp.status == "200")) {
             this.clearOrganizations();
         }
     }
@@ -74,13 +67,12 @@ export class Options extends BasicComponent {
     private loadOrganizations(): void {
         this.clearOrganizations();
 
-        let context: Options = this;
         let message = chrome.runtime.sendMessage({command: 'getActiveQueryAndOptions'},
-            function (message: any) {
+            (message: any) => {
                 Organizations.getOrganizationList(
                     message.userToken,
                     message.environment,
-                    function (response: any) {
+                    (response: any) => {
                         for (let index in response['items']) {
                             let organization: any = response['items'][index];
                             
@@ -99,42 +91,38 @@ export class Options extends BasicComponent {
     }
 
     private loadOptions(): void {
-        let context: Options = this;
-
         let message = chrome.runtime.sendMessage({command: 'getActiveQueryAndOptions'},
-            function (message: any) {
-                context._userToken = message.userToken;
-                context._environment = message.environment;
-                context._organizationId = message.organizationId;
+            (message: any) => {
+                this._userToken = message.userToken;
+                this._environment = message.environment;
+                this._organizationId = message.organizationId;
 
                 let options: any = (document.getElementById('environment') as HTMLSelectElement).options;
                 for (let i = 0; i < options.length; i++) {
-                    if (options[i].value == context._environment) {
+                    if (options[i].value == this._environment) {
                         (document.getElementById('environment') as HTMLSelectElement).selectedIndex = i;
                         break;
                     }
                 }
         
-                context.loadOrganizations();
+                this.loadOrganizations();
             }
         );
     }
 
     private watchIfLoginStateChanged(): void {
-        let context: Options = this;
-        
-        let message = chrome.runtime.sendMessage({command: 'getActiveQueryAndOptions'},
-            function (message: any) {
-                if (context._userToken != message.userToken) {
+        chrome.runtime.sendMessage({command: 'getActiveQueryAndOptions'},
+            (message: any) => {
+                if (this._userToken != message.userToken) {
                     let userIsLoggedIn = chrome.runtime.sendMessage(
                         {
                             command: 'isUserLoggedIn'
                         },
-                        function (userIsLoggedInMessage: any) {
+                        (userIsLoggedInMessage: any) => {
                             if (userIsLoggedInMessage.userIsLoggedIn) {
-                                context.loadOptions();
+                                this.loadOptions();
                             } else {
-                                context.clearOrganizations();
+                                this.clearOrganizations();
                             }
                         }
                     );
@@ -146,16 +134,14 @@ export class Options extends BasicComponent {
                     });
                 }
                 
-                setTimeout(function () {
-                    context.watchIfLoginStateChanged()
+                setTimeout(() => {
+                    this.watchIfLoginStateChanged()
                 }, 1000);
             }
         );
     }
 
     public render(parent: string): void {
-        let context: Options = this;
-
         super.render(parent, `
             <h4>Environment</h4>
             <br />
@@ -179,39 +165,39 @@ export class Options extends BasicComponent {
             {
                 command: 'isUserLoggedIn'
             },
-            function (userIsLoggedInMessage: any) {
-                context._userToken = userIsLoggedInMessage.userToken;
+            (userIsLoggedInMessage: any) => {
+                this._userToken = userIsLoggedInMessage.userToken;
 
                 if (userIsLoggedInMessage.userIsLoggedIn) {
-                    context.loadOptions();
+                    this.loadOptions();
                 }
                 
-                context.watchIfLoginStateChanged();
+                this.watchIfLoginStateChanged();
             }
         );
 
-        document.getElementById('environment').addEventListener("change", function() {
+        document.getElementById('environment').addEventListener("change", () => {
             let select: HTMLSelectElement = document.getElementById('environment') as HTMLSelectElement;
-            context._environment = (select.options[select.selectedIndex] as HTMLOptionElement).value;
-            context._userToken = null;
-            context._organizationId = null;
+            this._environment = (select.options[select.selectedIndex] as HTMLOptionElement).value;
+            this._userToken = null;
+            this._organizationId = null;
 
             chrome.runtime.sendMessage(
                 {
                     command: 'logout'
                 },
-                function (message) {
-                    context.saveOptions();
-                    context.clearOrganizations();
+                (message) => {
+                    this.saveOptions();
+                    this.clearOrganizations();
                     (document.getElementById('loginFrame') as HTMLIFrameElement).contentWindow.location.reload();
                 }
             );
         });
 
-        document.getElementById('organizations').addEventListener("change", function() {
+        document.getElementById('organizations').addEventListener("change", () => {
             let select: HTMLSelectElement = document.getElementById('organizations') as HTMLSelectElement;
-            context._organizationId = (select.options[select.selectedIndex] as HTMLOptionElement).value;
-            context.saveOptions();
+            this._organizationId = (select.options[select.selectedIndex] as HTMLOptionElement).value;
+            this.saveOptions();
         });
     }
 }
