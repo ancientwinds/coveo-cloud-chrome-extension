@@ -33,7 +33,6 @@ export class BasicComponent {
     }
 
     public render(target: string, html: string, showComponent: boolean = true): void {
-        // console.log(`Rendering component ${this._guid} of type ${this._className}`);
         $(target).append(html);
         $(target).html($(target).html().replace(/&nbsp;/g, ''));
         $('#' + this._guid).addClass(this._className);
@@ -51,8 +50,12 @@ export class BasicComponent {
         ComponentStore.unregisterComponent(this);
     }
 
-    public remove(): void {
+    public clear(): void {
         $('#' + this._guid).remove();
-        ComponentStore.unregisterComponent(this);
+    }
+
+    public remove(): void {
+        this.clear();
+        this.unregister();
     }
 }

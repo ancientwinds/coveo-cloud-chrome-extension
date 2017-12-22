@@ -3,27 +3,25 @@ declare let $: any;
 
 import { BasicComponent } from '../BasicComponent';
 import { ComponentStore } from '../ComponentStore';
-import { Configuration } from './Configuration';
+import { PlatformUrls } from './PlatformUrls';
 import { Url } from '../../commons/utils/Url';
 
 /*
 * Classe d'authentication. Utilise la même authentication que notre swagger.
 */
 export class Authentication  extends BasicComponent {
-    private _platform = null;
     private _lastToken: string = null;
 
     private static _loginValidationTimer = null;
 
     constructor() {
         super ('Authentication');
-        this._platform = Configuration.PLATFORM_URL;
     }
 
     public getUserToken(callback: Function): void {
         chrome.storage.local.get(
             ['coveoforgooglecloudsearch_usertoken'], 
-            function(items) {
+            (items) => {
                 callback(items['coveoforgooglecloudsearch_usertoken']);
             }
         );
@@ -35,40 +33,50 @@ export class Authentication  extends BasicComponent {
         redirect_uri = redirect_uri.replace('login.html', 'o2c.html');
         redirect_uri = encodeURIComponent(redirect_uri);
 
-        window.open(`${this._platform}/oauth/authorize?response_type=token&redirect_uri=${redirect_uri}&realm=Platform&client_id=Swagger&scope=full&state=oauth2`);
-
-        // As all the new windows are loaded in incognito mode (chrome extension limitations), we need to validate once in a while if ther're a token in the local storage
-        let context = this;
-        // TODO: Fix that thing... it loops... forever... 
-        Authentication._loginValidationTimer = setInterval(function() {
-            chrome.storage.local.get(
-                ['coveoforgooglecloudsearch_usertoken'], 
-                function(items) {
-                    let auth: Authentication = new Authentication();
-                    if (items['coveoforgooglecloudsearch_usertoken'] && context._lastToken != items['coveoforgooglecloudsearch_usertoken']) {
-                        context._lastToken = items['coveoforgooglecloudsearch_usertoken'];
-                        auth.validateToken(items['coveoforgooglecloudsearch_usertoken'], context.afterTokenValidation);
+        chrome.runtime.sendMessage(
+            {
+                command: 'saveUserToken',
+                userToken: null
+            },
+            (removeTokenResponse: any) => {
+                chrome.runtime.sendMessage({command: 'getActiveQueryAndOptions'},
+                    (message: any) => {
+                        window.open(`${PlatformUrls.getPlatformUrl(message.environment)}/oauth/authorize?response_type=token&redirect_uri=${redirect_uri}&realm=Platform&client_id=Swagger&scope=full&state=oauth2`);
+        
+                        // As all the pages are opened in an incognito mode, we need to validate if the login occured...
+                        Authentication._loginValidationTimer = setInterval(() => {
+                            let message = chrome.runtime.sendMessage({command: 'getActiveQueryAndOptions'},
+                                (message: any) => {
+                                    if (this._lastToken != message.userToken) {
+                                        let auth: Authentication = new Authentication();
+                                        this._lastToken = message.userToken;
+                                        auth.validateToken(message.environment, message.userToken, this.afterTokenValidation);
+                                    }
+                                }
+                            );
+                        }, 500);
                     }
-                }
-            );
-        }, 500);
+                );
+            }
+        );
     }
 
     public logout(): void {
-        chrome.storage.local.set(
+        let message = chrome.runtime.sendMessage(
             {
-            'coveoforgooglecloudsearch_usertoken': null
-            }, 
-            function() {
+                command: 'saveUserToken',
+                userToken: null
+            },
+            (message) => {
                 $('#validToken').hide();
                 $('#invalidToken').show();
             }
         );
     }
 
-    public validateToken(token: string = '', callback: Function): void {
+    public validateToken(environment: string, token: string = '', callback: Function): void {
         let xhttp = new XMLHttpRequest();
-        xhttp.open('GET', this._platform + '/rest/oauth2clients/Swagger', true);
+        xhttp.open('GET', PlatformUrls.getPlatformUrl(environment) + '/rest/oauth2clients/Swagger', true);
         xhttp.setRequestHeader('Content-type', 'application/json');
         xhttp.setRequestHeader('Authorization', 'Bearer ' + token);
         xhttp.onload = function () {
@@ -87,13 +95,28 @@ export class Authentication  extends BasicComponent {
             $('#invalidToken').show();
         }
 
-        chrome.runtime.sendMessage({
-            command: "loadOptions"
-        });
+        chrome.runtime.sendMessage(
+            {
+                command: "loadOptions"
+            },
+            () => {
+                // Nothing to do here.
+            }
+        );
     }
 
     public processOAuthReturn(): void {
-        Url.hashParameterToLocalStorage('access_token', 'coveoforgooglecloudsearch_usertoken', true);
+        let userToken: string = Url.getHashParameter('access_token');
+
+        chrome.runtime.sendMessage(
+            {
+                command: "saveUserToken",
+                userToken: userToken
+            },
+            () => {
+                window.close();
+            }
+        );
     }
 
     public render(parent: string): void {
@@ -108,22 +131,17 @@ export class Authentication  extends BasicComponent {
             </div>
         `);
 
-        let context = this;
-
-        document.getElementById('loginButton').addEventListener('click', function () {
-            ComponentStore.execute(context._guid, 'login', context.btoaAndStringify({}));
+        document.getElementById('loginButton').addEventListener('click', () => {
+            this.login();
         });
 
-        document.getElementById('logoutButton').addEventListener('click', function () {
-            ComponentStore.execute(context._guid, 'logout', context.btoaAndStringify({}));
+        document.getElementById('logoutButton').addEventListener('click', () => {
+            this.logout();
         });
-    
-        chrome.storage.local.get(
-            ['coveoforgooglecloudsearch_usertoken'], 
-            function(items) {
-                if (context.validateToken(items['coveoforgooglecloudsearch_usertoken'], context.afterTokenValidation)) {
-                    // Hooray!
-                }
+
+        chrome.runtime.sendMessage({command: 'getActiveQueryAndOptions'},
+            (message: any) => {
+                this.validateToken(message.environment, message.userToken, this.afterTokenValidation);
             }
         );
     }

@@ -21,32 +21,33 @@ export class ChangeWatcher extends BasicComponent {
     }
 
     public executeCallback(): void {
-        this._callBack((document.querySelector(this._querySelector) as HTMLInputElement).value);
+        if ((document.querySelector(this._querySelector) as HTMLInputElement).value) {
+            this._currentValue = (document.querySelector(this._querySelector) as HTMLInputElement).value;
+        }
+
+        this._callBack(this._currentValue);
     }
 
     public watchForChanges(): void {
-        let context: ChangeWatcher = this;
-        
         if (document.querySelector(this._querySelector)) {
-            if ((document.querySelector(this._querySelector) as HTMLInputElement).value != this._currentValue) {
-                    this._currentValue = (document.querySelector(this._querySelector) as HTMLInputElement).value;
-                    this._callBack((document.querySelector(this._querySelector) as HTMLInputElement).value);
+            try {
+                let element: HTMLInputElement = (document.querySelector(this._querySelector) as HTMLInputElement)
+                if (element.value != this._currentValue) {
+                    this._currentValue = element.value;
+                    this._callBack(element.value);
+                }
+            } catch (e) {
+                // Nothing to do.
             }
-
-            this._timeout= setTimeout(function() {
-                ComponentStore.execute(context._guid, 'watchForChanges', context.btoaAndStringify({}))
-            }, this._watchIntervalInMiliseconds);
         } else  {
-            console.warn(`ChangeWatcher: Element ${this._querySelector} was not found on the page.`);
-
             if (this._clearIntervalOnElementNotFound) {
                 clearTimeout(this._timeout);
-            } else {
-                this._timeout= setTimeout(function() {
-                    ComponentStore.execute(context._guid, 'watchForChanges', context.btoaAndStringify({}))
-                }, this._watchIntervalInMiliseconds);
             }
         }
+
+        this._timeout= setTimeout(() => {
+            this.watchForChanges();
+        }, this._watchIntervalInMiliseconds);
     }
 
     public stopWatching(): void {

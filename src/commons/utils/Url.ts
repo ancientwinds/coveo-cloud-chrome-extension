@@ -20,20 +20,10 @@ export class Url {
         return hashDict;
     }
 
-    public static  hashParameterToLocalStorage(parameterName: string, storageKey: string, closeWindow: boolean = false) {
+    public static  getHashParameter(parameterName: string) {
         let params = Url.convertWindowHashToDict();
-        if (params['access_token']) {
-            chrome.storage.local.set(
-                {
-                    'coveoforgooglecloudsearch_usertoken': params['access_token']
-                }, 
-                function() {
-                    // Add a confirmation?
-                }
-            );
-        }
-        window.close();
         
+        return params['access_token'] || null;
     }
 
     public static checkIfUrlLocationContains(searchValue: string): boolean {
