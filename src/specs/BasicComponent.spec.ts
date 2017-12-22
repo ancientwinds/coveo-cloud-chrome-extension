@@ -23,16 +23,4 @@ describe('Components management', () => {
         component.unregister();
         should().not.exist(ComponentStore.getComponents().Item(component.getComponentId()));
     });
-    /*
-    it('should btoa and stringify the dictionary' , () => {
-        console.log(component.btoaAndStringify({'test':'this is a test'}));
-    });
-
-    it('should correctly unregister the component using the component store execute method' , () => {
-        component = new BasicComponent('Test');
-        should().exist(ComponentStore.getComponents().Item(component.getComponentId()));
-        ComponentStore.execute(component.getComponentId(), 'unregister', component.btoaAndStringify({}));
-        should().not.exist(ComponentStore.getComponents().Item(component.getComponentId()));
-    });
-    */
 });

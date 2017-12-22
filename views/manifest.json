@@ -1,10 +1,10 @@
 {
     "manifest_version": 2,
-    "name": "Coveo for Google Cloud Search",
-    "short_name": "C4GoogleCS",
-    "description": "Adds a Coveo button to Google Cloud Search, to search content from outside the Google Suite. When Clicked, it displays a result overlay.",
-    "version": "0.2",
-    "homepage_url": "https://github.com/coveo-labs/...",
+    "name": "Coveo Search Chrome Extension",
+    "short_name": "CoveoSearch",
+    "description": "Adds a Coveo icon to the tool bar. Click on it to get more results as you search the web.",
+    "version": "0.0.4",
+    "homepage_url": "https://github.com/ancientwinds/coveo-cloud-chrome-extension",
     "options_ui": {
       "page": "/html/options.html",
       "chrome_style": true
