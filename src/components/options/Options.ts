@@ -45,7 +45,7 @@ export class Options extends BasicComponent {
                     this._userToken = message.userToken;
                     let auth: Authentication = new Authentication();
                     auth.unregister();
-    
+
                     auth.validateToken(
                         message.environment,
                         message.userToken,
@@ -73,17 +73,15 @@ export class Options extends BasicComponent {
                     message.userToken,
                     message.environment,
                     (response: any) => {
-                        for (let index in response['items']) {
-                            let organization: any = response['items'][index];
-                            
+                        (response.items || []).forEach( (organization: any, index:number ) => {
                             let option: HTMLOptionElement = document.createElement('option');
-                            option.value = organization['id'];
-                            option.innerHTML = organization['displayName'];
-                            if (organization['id'] === message.organizationId) {
+                            option.value = organization.id;
+                            option.innerHTML = organization.displayName;
+                            if (organization.id === message.organizationId) {
                                 option.selected = true;
                             }
                             document.getElementById('organizations').appendChild(option);
-                        }
+                        });
                     }
                 );
             }
@@ -104,7 +102,7 @@ export class Options extends BasicComponent {
                         break;
                     }
                 }
-        
+
                 this.loadOrganizations();
             }
         );
@@ -130,10 +128,10 @@ export class Options extends BasicComponent {
                     chrome.runtime.sendMessage({
                         command: 'search',
                         queryExpression: '',
-                        origin: window.location.href 
+                        origin: window.location.href
                     });
                 }
-                
+
                 setTimeout(() => {
                     this.watchIfLoginStateChanged()
                 }, 1000);
@@ -171,7 +169,7 @@ export class Options extends BasicComponent {
                 if (userIsLoggedInMessage.userIsLoggedIn) {
                     this.loadOptions();
                 }
-                
+
                 this.watchIfLoginStateChanged();
             }
         );
