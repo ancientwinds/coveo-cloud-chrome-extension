@@ -100,8 +100,6 @@ export class Popup extends BasicComponent {
                 </div>
                 </div>
         `);
-
-        Coveo.init(document.querySelector('#search'));
     }
 
     public render(parent: string): void {
@@ -114,6 +112,8 @@ export class Popup extends BasicComponent {
                     chrome.runtime.sendMessage({command: 'getActiveQueryAndOptions'},
                         (message: any) => {
                             if (message.organizationId) {
+                                this.renderSearchPage(parent);
+
                                 this._defaultEndpoint = Coveo.SearchEndpoint.endpoints["default"] = new Coveo.SearchEndpoint({
                                     restUri: `${PlatformUrls.getPlatformUrl(message.environment)}/rest/search`,
                                     accessToken: message.userToken,
@@ -124,9 +124,13 @@ export class Popup extends BasicComponent {
 
                                 Coveo.Analytics.options.endpoint.defaultValue = PlatformUrls.getAnalyticsUrl(message.environment);
                                 Coveo.Analytics.options.organization.defaultValue = message.organizationId;
+                                
+                                let search: any = document.querySelector('#search');
+                                Coveo.$$(search).on('afterInitialization', ()=>{
+                                    Coveo.state(search, 'q', message.activeQuery);
+                                });
 
-                                location.hash = `q=${message.activeQuery}`;
-                                this.renderSearchPage(parent);
+                                Coveo.init(search);
                             } else {
                                 this.renderNotLoggedIn(parent);
                             }

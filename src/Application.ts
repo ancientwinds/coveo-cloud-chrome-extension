@@ -30,6 +30,8 @@ export class Application extends BasicComponent {
     }
 
     public bindSearch() {
+        let executeSearch: boolean = true;
+
         if (Url.checkIfUrlLocationContains('cloudsearch.google.com')) {
             this.watchInput('[data-placeholder="Search"] input:nth-child(2)', true);
         } else if (Url.checkIfUrlLocationContains('drive.google.com')) {
@@ -47,6 +49,7 @@ export class Application extends BasicComponent {
         } else if (Url.checkIfUrlLocationContains('html/popup.html')) {
             this._popup = new Popup();
             this._popup.render('body');
+            executeSearch = false;
         } else if (!Url.checkIfUrlLocationContains('cloud.coveo.com/pages')) {
             this.watchInput('[name="q"]');
         }
@@ -57,7 +60,9 @@ export class Application extends BasicComponent {
             }
         }, false);
 
-        this.executeSearch();
+        if (executeSearch) {
+            this.executeSearch();
+        }
     }
 
     private executeSearch(): void {

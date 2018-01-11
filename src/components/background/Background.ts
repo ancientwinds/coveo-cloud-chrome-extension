@@ -163,7 +163,8 @@ export class Background extends BasicComponent {
 
     private isUserLoggedIn(callback: Function): void {
         let xhttp = new XMLHttpRequest();
-        xhttp.open('GET', PlatformUrls.getPlatformUrl(this._environment) + '/rest/oauth2clients/Swagger', true);
+        // xhttp.open('GET', PlatformUrls.getPlatformUrl(this._environment) + '/rest/oauth2clients/Swagger', true);
+        xhttp.open('GET', PlatformUrls.getPlatformUrl(this._environment) + '/rest/organizations', true);
         xhttp.setRequestHeader('Content-type', 'application/json');
         xhttp.setRequestHeader('Authorization', 'Bearer ' + this._userToken);
 
