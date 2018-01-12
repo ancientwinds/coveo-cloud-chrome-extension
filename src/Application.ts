@@ -5,7 +5,8 @@ import { Url } from './commons/utils/Url';
 import { BasicComponent } from './components/BasicComponent';
 import { Authentication } from './components/options/Authentication';
 import { Options } from './components/options/Options';
-import { Popup } from './components/popup/Popup';
+import { Popup } from './components/search/Popup';
+import { FullSearch } from './components/search/FullSearch';
 import { Background } from './components/background/Background';
 import { ChangeWatcher } from './components/utilities/ChangeWatcher';
 import { ComponentStore } from './components/ComponentStore';
@@ -15,6 +16,7 @@ export class Application extends BasicComponent {
     private _authentication: Authentication;
     private _options: Options;
     private _popup: Popup;
+    private _fullsearch: FullSearch;
     private _background: Background;
     private _changeWatcher: ChangeWatcher;
 
@@ -30,6 +32,8 @@ export class Application extends BasicComponent {
     }
 
     public bindSearch() {
+        let executeSearch: boolean = true;
+
         if (Url.checkIfUrlLocationContains('cloudsearch.google.com')) {
             this.watchInput('[data-placeholder="Search"] input:nth-child(2)', true);
         } else if (Url.checkIfUrlLocationContains('drive.google.com')) {
@@ -47,6 +51,11 @@ export class Application extends BasicComponent {
         } else if (Url.checkIfExtensionLocation('popup.html')) {
             this._popup = new Popup();
             this._popup.render('body');
+            executeSearch = false;
+        } else if (Url.checkIfUrlLocationContains('html/fullsearch.html')) {
+            this._fullsearch = new FullSearch();
+            this._fullsearch.render('body');
+            executeSearch = false;
         } else if (!Url.checkIfUrlLocationContains('cloud.coveo.com/pages')) {
             this.watchInput('[name="q"]');
         }
@@ -57,7 +66,9 @@ export class Application extends BasicComponent {
             }
         }, false);
 
-        this.executeSearch();
+        if (executeSearch) {
+            this.executeSearch();
+        }
     }
 
     private executeSearch(): void {
@@ -87,6 +98,13 @@ export class Application extends BasicComponent {
         });
     }
 
+
+    private searchSelectionAndOpenPopup() {
+        // Get selection
+        // Set active query
+        // Open popup
+    }
+
     public render(): void {
         this.renderBasicComponents();
 
@@ -108,6 +126,7 @@ export class Application extends BasicComponent {
                     this._background = new Background();
                     this._background.loadOptions(() => {
                         this._background.listenForMessages();
+                        this._background.render();
                     });
                 } else {
                     this.bindSearch();
