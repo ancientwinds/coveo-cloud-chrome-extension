@@ -35,39 +35,38 @@ export class FullSearch extends BasicComponent {
 
     private renderSearchPage(parent: string): void {
         super.render(parent, `
-            <div class="CoveoChromeExtension">
-                <div id="search" class="CoveoSearchInterface" data-enable-history="true" data-design="new">
-                <div class="CoveoChromeExtensionHeader">
-                    <div class="CoveoAnalytics"></div>
-                    <div class="coveo-search-section">
-                        <div class="CoveoSearchbox" data-enable-omnibox="true"></div>
-                    </div>
-                    <div class="coveo-facet-column">
-                        <div class="CoveoFacetLeft">
-                            <div class="CoveoFacet" data-number-of-values="3" data-title="Year" data-field="@year" data-tab="All"></div>
-                            <div class="CoveoFacet" data-number-of-values="3" data-title="Month" data-field="@month" data-tab="All"></div>
-                        </div>
-                        <div class="CoveoFacetRight">
-                            <div class="CoveoFacet" data-number-of-values="3" data-title="FileType" data-field="@filetype" data-tab="All"></div>
-                            <div class="CoveoFacet" data-number-of-values="3" data-title="Author" data-field="@author" data-tab="All"></div>
-                        </div>
-                    </div>
-                    <div class="coveo-results-header">
-                        <div class="coveo-sort-section">
-                            <span class="CoveoSort" data-sort-criteria="relevancy" data-caption="Relevance"></span>
-                            <span class="CoveoSort" data-sort-criteria="date descending,date ascending" data-caption="Date"></span>
-                        </div>
-                    </div>
+            <div id="search" class="CoveoSearchInterface" data-enable-history="true" data-design="new">
+                <div class="CoveoAnalytics"></div>
+                <div class="coveo-search-section">
+                    <div class="CoveoSettings"></div>
+                    <div class="CoveoSearchbox" data-enable-omnibox="true"></div>
                 </div>
                 <div id="coveo-main-section" class="coveo-main-section">
+                    <div class="coveo-facet-column">
+                        <div class="CoveoFacet" data-number-of-values="3" data-title="Year" data-field="@year" data-tab="All"></div>
+                        <div class="CoveoFacet" data-number-of-values="3" data-title="Month" data-field="@month" data-tab="All"></div>
+                        <div class="CoveoFacet" data-number-of-values="3" data-title="FileType" data-field="@filetype" data-tab="All"></div>
+                        <div class="CoveoFacet" data-number-of-values="3" data-title="Author" data-field="@author" data-tab="All"></div>
+                    </div>
                     <div class="coveo-results-column">
+                        <div class="CoveoShareQuery"></div>
+                        <div class="CoveoPreferencesPanel">
+                            <div class="CoveoResultsPreferences"></div>
+                            <div class="CoveoResultsFiltersPreferences"></div>
+                        </div>
                         <div class="CoveoTriggers"></div>
+                        <div class="CoveoBreadcrumb"></div>
+                        <div class="coveo-results-header">
+                            <div class="coveo-sort-section">
+                                <span class="CoveoSort" data-sort-criteria="relevancy" data-caption="Relevance"></span>
+                                <span class="CoveoSort" data-sort-criteria="date descending,date ascending" data-caption="Date"></span>
+                            </div>
+                        </div>
                         <div class="CoveoHiddenQuery"></div>
                         <div class="CoveoDidYouMean"></div>
                         <div class="CoveoErrorReport" data-pop-up="false"></div>
-                        <div class="CoveoResultList" data-layout="list" data-enable-infinite-scroll="true" data-infinite-scroll-container-selector='#coveo-main-section' data-wait-animation="fade" data-auto-select-fields-to-include="true">
+                        <div class="CoveoResultList" data-layout="list" data-enable-infinite-scroll="false" data-wait-animation="fade" data-auto-select-fields-to-include="true">
                             <script id="Default" class="result-template" type="text/html" data-layout="list">
-
                                 <div class="coveo-result-frame">
                                     <div class="coveo-result-row">
                                     <div class="coveo-result-cell" style="width:40px;text-align:center;">
@@ -96,9 +95,12 @@ export class FullSearch extends BasicComponent {
                                 </div>
                             </script>
                         </div>
+                        <div class="CoveoPager"></div>
+                        <div class="CoveoLogo"></div>
+                        <div class="CoveoResultsPerPage"></div>
                     </div>
                 </div>
-                </div>
+            </div>
         `);
     }
 
