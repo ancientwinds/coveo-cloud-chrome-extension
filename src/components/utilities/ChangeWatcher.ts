@@ -29,25 +29,26 @@ export class ChangeWatcher extends BasicComponent {
     }
 
     public watchForChanges(): void {
-        if (document.querySelector(this._querySelector)) {
+        let watchAgain = this.watchForChanges.bind(this);
+        let element: HTMLInputElement = (document.querySelector(this._querySelector) as HTMLInputElement)
+
+        if (element) {
             try {
-                let element: HTMLInputElement = (document.querySelector(this._querySelector) as HTMLInputElement)
-                if (element.value != this._currentValue) {
+                if (element.value !== this._currentValue) {
                     this._currentValue = element.value;
                     this._callBack(element.value);
                 }
             } catch (e) {
                 // Nothing to do.
             }
-        } else  {
-            if (this._clearIntervalOnElementNotFound) {
-                clearTimeout(this._timeout);
-            }
+            this._timeout = setTimeout(watchAgain, this._watchIntervalInMiliseconds);
         }
-
-        this._timeout= setTimeout(() => {
-            this.watchForChanges();
-        }, this._watchIntervalInMiliseconds);
+        else if (this._clearIntervalOnElementNotFound) {
+             clearTimeout(this._timeout);
+        }
+        else {
+            this._timeout = setTimeout(watchAgain, this._watchIntervalInMiliseconds);
+       }
     }
 
     public stopWatching(): void {
