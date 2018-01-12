@@ -100,6 +100,7 @@ export class Background extends BasicComponent {
                         sendResponse(message);
                     });
                 }
+
                 return true; 
         });
     }
@@ -119,6 +120,29 @@ export class Background extends BasicComponent {
                 });
             }
         );
+    }
+    private getSelectionAndOpenFullSearch() {
+        chrome.tabs.executeScript( {
+            code: "window.getSelection().toString();"
+        }, (selection) => {
+            if (selection) {
+                if (selection.length > 0) {
+                    this.search(selection[0]);
+                    chrome.tabs.create({url:"html/fullsearch.html"});
+                }
+            }
+        });
+    }
+
+    public render() {
+        // Create the menu
+        chrome.contextMenus.create({
+            title: "Search in Coveo",
+            contexts:["selection"],
+            onclick: () => {
+                this.getSelectionAndOpenFullSearch();
+            }
+        });
     }
 
     private saveOptions(environment: string, organizationId: string, sendResponse: Function): void {

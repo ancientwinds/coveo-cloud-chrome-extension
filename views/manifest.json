@@ -44,7 +44,9 @@
       "https://*/*",
       "storage",
       "webRequest",
-      "webRequestBlocking"
+      "webRequestBlocking",
+      "contextMenus",
+      "activeTab"
     ],
     "web_accessible_resources": [
       "/html/*",

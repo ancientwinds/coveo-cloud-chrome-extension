@@ -41,8 +41,8 @@ export class Authentication  extends BasicComponent {
             (removeTokenResponse: any) => {
                 chrome.runtime.sendMessage({command: 'getActiveQueryAndOptions'},
                     (message: any) => {
-                        window.open(`${PlatformUrls.getPlatformUrl(message.environment)}/oauth/authorize?response_type=token&redirect_uri=${redirect_uri}&realm=Platform&client_id=CoveoSearchExtension&scope=full&state=oauth2`);
-                        // window.open(`${PlatformUrls.getPlatformUrl(message.environment)}/oauth/authorize?response_type=token&redirect_uri=${redirect_uri}&realm=Platform&client_id=Swagger&scope=full&state=oauth2`);
+                        // window.open(`${PlatformUrls.getPlatformUrl(message.environment)}/oauth/authorize?response_type=token&redirect_uri=${redirect_uri}&realm=Platform&client_id=CoveoSearchExtension&scope=full&state=oauth2`);
+                        window.open(`${PlatformUrls.getPlatformUrl(message.environment)}/oauth/authorize?response_type=token&redirect_uri=${redirect_uri}&realm=Platform&client_id=Swagger&scope=full&state=oauth2`);
         
                         // As all the pages are opened in an incognito mode, we need to validate if the login occured...
                         Authentication._loginValidationTimer = setInterval(() => {
