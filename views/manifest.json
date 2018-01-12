@@ -1,0 +1,55 @@
+{
+    "manifest_version": 2,
+    "name": "Coveo Search Chrome Extension",
+    "short_name": "CoveoSearch",
+    "description": "Adds a Coveo icon to the tool bar. Click on it to get more results as you search the web.",
+    "version": "0.0.9",
+    "homepage_url": "https://github.com/ancientwinds/coveo-cloud-chrome-extension",
+    "options_ui": {
+      "page": "/html/options.html",
+      "chrome_style": true
+    },
+    "browser_action": {
+      "default_popup": "html/popup.html",
+      "default_icon": "images/48.png"
+    },
+    "background": {
+      "page": "html/background.html"
+    },
+    "icons": {
+      "16": "images/16.png",
+      "48": "images/48.png",
+      "128": "images/128.png"
+    },
+    "content_scripts": [
+      {
+        "run_at": "document_end",
+        "matches": [
+          "http://*/*",
+          "https://*/*"
+        ],
+        "js": [
+          "js/vendor/jquery-3.2.1.min.js",
+          "js/myApp.bundle.js"
+        ],
+        "css": [
+          "css/main.css"
+        ],
+        "all_frames": false
+      }
+    ],
+    "permissions": [
+      "tabs",
+      "http://*/*",
+      "https://*/*",
+      "storage",
+      "webRequest",
+      "webRequestBlocking",
+      "contextMenus",
+      "activeTab"
+    ],
+    "web_accessible_resources": [
+      "/html/*",
+      "/js/*"
+    ]
+  }

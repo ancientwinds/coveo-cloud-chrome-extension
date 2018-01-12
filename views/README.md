@@ -4,7 +4,7 @@
 Provides a Chrome extension that hooks on several pages to complement some search boxes like google using the content of your coveo organization.
 
 ## How to build
-1. TODO
+1. gulp dev
 
 ## How to run
 1. download or clone
@@ -21,3 +21,7 @@ Currently hooks on :
 1. perdu.com
 2. google.com, google.ca, google.fr
 3. cloudsearch.google.com
+4. bing.com
+5. stackoverflow.com
+6. a lot more (with the generic "name=q" selector)
+

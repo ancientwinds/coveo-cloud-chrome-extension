@@ -1,0 +1,131 @@
+html, body {
+    background-color: white;
+    overflow: hidden;
+}
+
+body {
+    width: 765px;
+    height: 580px;
+}
+
+.CoveoChromeExtension, .CoveoChromeExtension #search {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+}
+
+.CoveoChromeExtension #search {
+    display: flex!important; /* !important because JSUI updates the style explicitly to display:block; */
+}
+
+.CoveoChromeExtensionHeader .coveo-search-section {
+    margin: 10px auto;
+}
+
+.CoveoChromeExtension .coveo-facet-column {
+    display: none;
+}
+
+.CoveoChromeExtension .coveo-main-section {
+    height: 100%;
+    overflow: auto;
+}
+
+.CoveoChromeExtension .CoveoSearchInterface .coveo-search-section .CoveoSearchbox .CoveoSearchButton {
+    float: left;
+    border: none;
+}
+
+.CoveoChromeExtension .CoveoSearchInterface .coveo-search-section .CoveoSearchbox .magic-box .magic-box-input,
+.CoveoChromeExtension .CoveoSearchInterface .coveo-search-section .CoveoSearchbox .magic-box .magic-box-clear,
+.CoveoChromeExtension .CoveoSearchInterface .coveo-search-section .CoveoSearchbox {
+    background-color: #F6F6F6;
+}
+
+.CoveoChromeExtension .CoveoSearchInterface .coveo-search-section .CoveoSearchbox .magic-box {
+    border: none;
+}
+
+.CoveoChromeExtension .CoveoSearchInterface .coveo-search-section .CoveoSearchbox {
+    margin-right: 0px;
+    border: none;
+}
+
+.CoveoChromeExtension .CoveoSearchInterface .coveo-results-header {
+    flex-direction: row-reverse;
+}
+
+
+
+
+
+.CoveoChromeExtension .CoveoSearchInterface.coveo-small-facets .coveo-dropdown-header-wrapper {
+    justify-content: center;
+    position: relative;
+    top: 5px;
+}
+
+.CoveoSearchInterface.coveo-small-tabs .coveo-dropdown-header, .CoveoSearchInterface.coveo-small-facets .coveo-dropdown-header, .CoveoSearchInterface.coveo-small-recommendation .coveo-dropdown-header {
+    border-color: #F68004;
+    height: 26px;
+    z-index: 9999;
+}
+
+.CoveoSearchInterface.coveo-small-tabs .coveo-dropdown-header p, .CoveoSearchInterface.coveo-small-facets .coveo-dropdown-header, .CoveoSearchInterface.coveo-small-recommendation .coveo-dropdown-header p {
+    color: #F68004;
+    font-size: 16px;
+    line-height: 24px;
+}
+
+.CoveoSearchInterface.coveo-small-facets .coveo-facet-column.coveo-facet-dropdown-content {
+    width: 90% !important;
+    left: 5% !important;
+    min-height: 400px !important;
+}
+
+#search > div.coveo-facet-column.coveo-facet-dropdown-content.coveo-dropdown-content {
+    display: flex;
+    flex-wrap: wrap;
+
+    max-height: none;
+    overflow: auto;
+    bottom: 0;
+
+    box-shadow: none;
+}
+
+#search > div.coveo-facet-column.coveo-facet-dropdown-content.coveo-dropdown-content .CoveoFacet {
+    margin: 5px;
+    margin-bottom: 10px;
+    justify-content: center;
+    border-radius: 10px;
+    min-height: 187px;
+}
+
+#search > div.coveo-facet-column.coveo-facet-dropdown-content.coveo-dropdown-content .CoveoFacetLeft {
+    width: 50%;
+}
+
+#search > div.coveo-facet-column.coveo-facet-dropdown-content.coveo-dropdown-content .CoveoFacetRight {
+    width: 50%;
+}
+
+#search > div.coveo-facet-column.coveo-facet-dropdown-content.coveo-dropdown-content .CoveoFacet .coveo-facet-header {
+    border-top: none;
+}
+
+.coveo-dropdown-background {
+    background-color: rgba(28, 89, 118, 0.4);
+}
+
+.CoveoChromeExtension .CoveoSearchInterface .coveo-main-section .coveo-results-column .CoveoResultList .coveo-result-list-container .CoveoResult .coveo-result-frame .coveo-result-row .coveo-result-cell .CoveoIcon {
+    transform: scale(0.5);
+    vertical-align: top;
+    top: -8px;
+    left: -8px;
+}
+
+.CoveoChromeExtension .CoveoSearchInterface .coveo-main-section .coveo-results-column .CoveoResultList .coveo-result-list-container .CoveoResult .coveo-result-frame .coveo-result-row .coveo-result-cell .CoveoIcon .coveo-icon-caption-overlay {
+    display: none;
+}
