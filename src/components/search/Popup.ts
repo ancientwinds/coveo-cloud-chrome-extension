@@ -42,11 +42,7 @@ export class Popup extends BasicComponent {
                     <div class="coveo-search-section">
                         <div class="CoveoSearchbox" data-enable-omnibox="true"></div>
                     </div>
-                    <div class="coveo-summary-section">
-                        <span class="CoveoQuerySummary"></span>
-                        <span class="CoveoQueryDuration"></span>
-                    </div>
-                     <div class="coveo-facet-column">
+                    <div class="coveo-facet-column">
                         <div class="CoveoFacetLeft">
                             <div class="CoveoFacet" data-number-of-values="3" data-title="Year" data-field="@year" data-tab="All"></div>
                             <div class="CoveoFacet" data-number-of-values="3" data-title="Month" data-field="@month" data-tab="All"></div>
@@ -104,8 +100,6 @@ export class Popup extends BasicComponent {
                 </div>
                 </div>
         `);
-
-        Coveo.init(document.querySelector('#search'));
     }
 
     public render(parent: string): void {
@@ -118,6 +112,8 @@ export class Popup extends BasicComponent {
                     chrome.runtime.sendMessage({command: 'getActiveQueryAndOptions'},
                         (message: any) => {
                             if (message.organizationId) {
+                                this.renderSearchPage(parent);
+
                                 this._defaultEndpoint = Coveo.SearchEndpoint.endpoints["default"] = new Coveo.SearchEndpoint({
                                     restUri: `${PlatformUrls.getPlatformUrl(message.environment)}/rest/search`,
                                     accessToken: message.userToken,
@@ -128,9 +124,13 @@ export class Popup extends BasicComponent {
 
                                 Coveo.Analytics.options.endpoint.defaultValue = PlatformUrls.getAnalyticsUrl(message.environment);
                                 Coveo.Analytics.options.organization.defaultValue = message.organizationId;
+                                
+                                let search: any = document.querySelector('#search');
+                                Coveo.$$(search).on('afterInitialization', ()=>{
+                                    Coveo.state(search, 'q', message.activeQuery);
+                                });
 
-                                location.hash = `q=${message.activeQuery}`;
-                                this.renderSearchPage(parent);
+                                Coveo.init(search);
                             } else {
                                 this.renderNotLoggedIn(parent);
                             }
