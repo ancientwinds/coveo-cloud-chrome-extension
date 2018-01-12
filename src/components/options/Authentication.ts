@@ -52,7 +52,7 @@ export class Authentication  extends BasicComponent {
             (removeTokenResponse: any) => {
                 chrome.runtime.sendMessage({command: 'getActiveQueryAndOptions'},
                     (message: any) => {
-                        let client_id = /egcobhndnfihpdffpfmmebdojcbnfpee/.test(redirect_uri) ? 'CoveoSearchExtension' : 'Swaggger';
+                        let client_id = /egcobhndnfihpdffpfmmebdojcbnfpee/.test(redirect_uri) ? 'CoveoSearchExtension' : 'Swagger';
                         window.open(`${PlatformUrls.getPlatformUrl(message.environment)}/oauth/authorize?response_type=token&redirect_uri=${redirect_uri}&realm=Platform&client_id=${client_id}&scope=full&state=oauth2`);
 
                         // As all the pages are opened in an incognito mode, we need to validate if the login occured...

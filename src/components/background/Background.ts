@@ -20,14 +20,13 @@ export class Background extends BasicComponent {
         super ('Background');
     }
 
-
     public loadOptions(callback: Function = null): void {
         chrome.storage.local.get(
             {
                 'coveoforgooglecloudsearch_environment': 'production',
                 'coveoforgooglecloudsearch_usertoken': null,
                 'coveoforgooglecloudsearch_organization': null
-            }, 
+            },
             (items) => {
                 this._environment = items['coveoforgooglecloudsearch_environment'];
                 if (!this._environment) {
@@ -101,7 +100,7 @@ export class Background extends BasicComponent {
                     });
                 }
 
-                return true; 
+                return true;
         });
     }
 
@@ -110,7 +109,7 @@ export class Background extends BasicComponent {
         chrome.storage.local.set(
             {
                 'coveoforgooglecloudsearch_usertoken': userToken
-            }, 
+            },
             () => {
                 this._userToken = userToken;
                 callback({
@@ -151,7 +150,7 @@ export class Background extends BasicComponent {
             {
                 'coveoforgooglecloudsearch_environment': environment,
                 'coveoforgooglecloudsearch_organization': organizationId,
-            }, 
+            },
             () => {
                 this._environment = environment;
                 this._organizationId = organizationId;
@@ -170,19 +169,19 @@ export class Background extends BasicComponent {
         let url = `${PlatformUrls.getPlatformUrl(this._environment)}/rest/search/v2/?organizationId=${this._organizationId}&q=${queryExpression}&cq=${this._constantQueryExpression}`;
         let xhttp = new XMLHttpRequest();
 
-        xhttp.onreadystatechange = function() { 
+        xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-                let results: any = JSON.parse(xhttp.responseText); 
- 
+                let results: any = JSON.parse(xhttp.responseText);
+
                 chrome.browserAction.setBadgeText({text: String(results.totalCount)});
             } else {
                 chrome.browserAction.setBadgeText({text: "..."});
             }
-        }; 
- 
-        xhttp.open('GET', url, true); 
-        xhttp.setRequestHeader('Authorization', `Bearer ${this._userToken}`); 
-        xhttp.send(); 
+        };
+
+        xhttp.open('GET', url, true);
+        xhttp.setRequestHeader('Authorization', `Bearer ${this._userToken}`);
+        xhttp.send();
     }
 
     private isUserLoggedIn(callback: Function): void {
