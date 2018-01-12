@@ -82,6 +82,14 @@ export class Options extends BasicComponent {
                             }
                             document.getElementById('organizations').appendChild(option);
                         });
+
+                        $('#organizations').chosen({
+                            allow_single_deselect: true,
+                            disable_search_threshold: 10,
+                        });
+
+                        // $('#environment').on('change', this.onChangeEnv.bind(this));
+                        $('#organizations').on('change', this.onChangeOrg.bind(this));
                     }
                 );
             }
@@ -139,25 +147,60 @@ export class Options extends BasicComponent {
         );
     }
 
+    private onChangeEnv(evt, params) {
+        console.log('onChangeEnv: ', params.selected);
+        this._environment = params.selected;
+        this._userToken = null;
+        this._organizationId = null;
+
+        chrome.runtime.sendMessage(
+            {
+                command: 'logout'
+            },
+            (message) => {
+                this.saveOptions();
+                console.log('00000 REMALOASD');
+                setTimeout(()=>{
+                    console.log('REMALOASD');
+                    window.location.reload()}, 2000);
+                //this.clearOrganizations();
+                //(document.getElementById('loginFrame') as HTMLIFrameElement).contentWindow.location.reload();
+            }
+        );
+    }
+
+    private onChangeOrg(evt, params) {
+        console.log('onChangeOrg: ', params);
+        this._organizationId = params.selected;
+        this.saveOptions();
+    }
+
     public render(parent: string): void {
         super.render(parent, `
-            <h4>Environment</h4>
-            <br />
-            <select id="environment" class="FullWidthSelect">
+            <h2>Environment</h2>
+            <select id="environment" class="chosen js-chosen-single-select FullWidthSelect">
                 <option value="production">Coveo Cloud</option>
                 <option value="hipaa">Coveo Cloud HIPAA</option>
                 <option value="qa">Coveo Cloud Internal Testing</option>
             </select>
-            <h4>Organization</h4>
-            <br />
-            <select id="organizations" class="FullWidthSelect">
+
+            <h2>Organization</h2>
+            <select id="organizations" class="chosen js-chosen-single-select FullWidthSelect">
                 <option value="none">Please select an organization</option>
             </select>
-            <br /><br />
-            <h4>Login status</h4>
+
+            <h2>Login status</h2>
             <iframe id="loginFrame" style="border: none; width: 300px; height: 300px;" src="login.html"></iframe>
+
             <div id="messages"></div>
         `);
+
+        $('.js-chosen-single-select').chosen({
+            allow_single_deselect: true,
+            disable_search_threshold: 10,
+        });
+
+        $('#environment').on('change', this.onChangeEnv.bind(this));
 
         let userIsLoggedIn = chrome.runtime.sendMessage(
             {
@@ -173,29 +216,5 @@ export class Options extends BasicComponent {
                 this.watchIfLoginStateChanged();
             }
         );
-
-        document.getElementById('environment').addEventListener("change", () => {
-            let select: HTMLSelectElement = document.getElementById('environment') as HTMLSelectElement;
-            this._environment = (select.options[select.selectedIndex] as HTMLOptionElement).value;
-            this._userToken = null;
-            this._organizationId = null;
-
-            chrome.runtime.sendMessage(
-                {
-                    command: 'logout'
-                },
-                (message) => {
-                    this.saveOptions();
-                    this.clearOrganizations();
-                    (document.getElementById('loginFrame') as HTMLIFrameElement).contentWindow.location.reload();
-                }
-            );
-        });
-
-        document.getElementById('organizations').addEventListener("change", () => {
-            let select: HTMLSelectElement = document.getElementById('organizations') as HTMLSelectElement;
-            this._organizationId = (select.options[select.selectedIndex] as HTMLOptionElement).value;
-            this.saveOptions();
-        });
     }
 }

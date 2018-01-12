@@ -14,6 +14,7 @@ import { PlatformUrls } from './components/options/PlatformUrls';
 export class Application extends BasicComponent {
     private _authentication: Authentication;
     private _options: Options;
+    private _last: string;
     private _popup: Popup;
     private _background: Background;
     private _changeWatcher: ChangeWatcher;
@@ -44,7 +45,7 @@ export class Application extends BasicComponent {
             }
         } else if (Url.checkIfUrlLocationContains('www.amazon.com')) {
             this.watchInput('[name="field-keywords"]');
-        } else if (Url.checkIfUrlLocationContains('html/popup.html')) {
+        } else if (Url.checkIfExtensionLocation('popup.html')) {
             this._popup = new Popup();
             this._popup.render('body');
         } else if (!Url.checkIfUrlLocationContains('cloud.coveo.com/pages')) {
@@ -64,6 +65,7 @@ export class Application extends BasicComponent {
         if (this._changeWatcher) {
             this._changeWatcher.executeCallback();
         } else {
+            console.log('12 - executeSearch:', this._last);
             this.search('');
         }
     }
@@ -71,19 +73,25 @@ export class Application extends BasicComponent {
     public watchInput(querySelector: string, ignoreActualElementExistence: boolean = false): void {
         let searchBox: HTMLInputElement = (document.querySelector(querySelector) as HTMLInputElement);
         if (searchBox || ignoreActualElementExistence) {
-            this._changeWatcher = new ChangeWatcher(querySelector, (searchQuery: string) => { 
+            this._changeWatcher = new ChangeWatcher(querySelector, (searchQuery: string) => {
+                console.log('13 - watchInput', searchQuery);
                 this.search(searchQuery);
-            }, 200, !ignoreActualElementExistence); 
+            }, 200, !ignoreActualElementExistence);
         } else {
+            console.log('15 - watchInput');
             this.search('');
         }
     }
 
     public search(query: string): void {
+        console.log('14 - PBULIC search', query,'Last=', this._last);
+        if (query) {
+            this._last = query;
+        }
         chrome.runtime.sendMessage({
             command: 'search',
-            queryExpression: query,
-            origin: window.location.href 
+            queryExpression: query || this._last,
+            origin: window.location.href
         });
     }
 
@@ -93,18 +101,18 @@ export class Application extends BasicComponent {
         chrome.storage.local.get(
             {
                 'coveoforgooglecloudsearch_environment': 'production'
-            }, 
+            },
             (items) => {
-                if (Url.checkIfUrlLocationContains('/login.html')) {
+                if (Url.checkIfExtensionLocation('login.html')) {
                     this._authentication = new Authentication();
                     this._authentication.render(`#${this._guid}`);
-                } else if (Url.checkIfUrlLocationContains('/o2c.html')) {
+                } else if (Url.checkIfExtensionLocation('o2c.html')) {
                     this._authentication = new Authentication();
                     this._authentication.processOAuthReturn();
-                } else if (Url.checkIfUrlLocationContains('/options.html')) {
+                } else if (Url.checkIfExtensionLocation('options.html')) {
                     this._options = new Options();
                     this._options.render(`#${this._guid}`);
-                } else if (Url.checkIfUrlLocationContains('/background.html')) {
+                } else if (Url.checkIfExtensionLocation('background.html')) {
                     this._background = new Background();
                     this._background.loadOptions(() => {
                         this._background.listenForMessages();

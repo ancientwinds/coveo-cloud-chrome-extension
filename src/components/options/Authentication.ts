@@ -18,9 +18,20 @@ export class Authentication  extends BasicComponent {
         super ('Authentication');
     }
 
+    private _validate(isValid: boolean): void {
+        if (isValid) {
+            $('#validToken').show();
+            $('#invalidToken').hide();
+        }
+        else {
+            $('#validToken').hide();
+            $('#invalidToken').show();
+        }
+    }
+
     public getUserToken(callback: Function): void {
         chrome.storage.local.get(
-            ['coveoforgooglecloudsearch_usertoken'], 
+            ['coveoforgooglecloudsearch_usertoken'],
             (items) => {
                 callback(items['coveoforgooglecloudsearch_usertoken']);
             }
@@ -41,8 +52,8 @@ export class Authentication  extends BasicComponent {
             (removeTokenResponse: any) => {
                 chrome.runtime.sendMessage({command: 'getActiveQueryAndOptions'},
                     (message: any) => {
-                        window.open(`${PlatformUrls.getPlatformUrl(message.environment)}/oauth/authorize?response_type=token&redirect_uri=${redirect_uri}&realm=Platform&client_id=CoveoSearchExtension&scope=full&state=oauth2`);
-        
+                        window.open(`${PlatformUrls.getPlatformUrl(message.environment)}/oauth/authorize?response_type=token&redirect_uri=${redirect_uri}&realm=Platform&client_id=Swagger&scope=full&state=oauth2`);
+
                         // As all the pages are opened in an incognito mode, we need to validate if the login occured...
                         Authentication._loginValidationTimer = setInterval(() => {
                             let message = chrome.runtime.sendMessage({command: 'getActiveQueryAndOptions'},
@@ -50,7 +61,7 @@ export class Authentication  extends BasicComponent {
                                     if (this._lastToken != message.userToken) {
                                         let auth: Authentication = new Authentication();
                                         this._lastToken = message.userToken;
-                                        auth.validateToken(message.environment, message.userToken, this.afterTokenValidation);
+                                        auth.validateToken(message.environment, message.userToken, this.afterTokenValidation.bind(this));
                                     }
                                 }
                             );
@@ -62,14 +73,13 @@ export class Authentication  extends BasicComponent {
     }
 
     public logout(): void {
-        let message = chrome.runtime.sendMessage(
+        chrome.runtime.sendMessage(
             {
                 command: 'saveUserToken',
                 userToken: null
             },
-            (message) => {
-                $('#validToken').hide();
-                $('#invalidToken').show();
+            () => {
+                this._validate(false);
             }
         );
     }
@@ -87,13 +97,7 @@ export class Authentication  extends BasicComponent {
     }
 
     public afterTokenValidation(xhttp: any): void {
-        if (xhttp.status === 200) {
-            $('#validToken').show();
-            $('#invalidToken').hide();
-        } else {
-            $('#validToken').hide();
-            $('#invalidToken').show();
-        }
+        this._validate(xhttp.status === 200);
 
         chrome.runtime.sendMessage(
             {
@@ -124,7 +128,7 @@ export class Authentication  extends BasicComponent {
             <div id="invalidToken" style="display:none;">
                 <button id="loginButton" class="btn">Login</button>
             </div>
-            
+
             <div id="validToken" style="display:none;">
                 <span class="token-status-good">Your current token is valid.</span>
                 <button id="logoutButton" class="btn">Logout</button>
@@ -141,7 +145,7 @@ export class Authentication  extends BasicComponent {
 
         chrome.runtime.sendMessage({command: 'getActiveQueryAndOptions'},
             (message: any) => {
-                this.validateToken(message.environment, message.userToken, this.afterTokenValidation);
+                this.validateToken(message.environment, message.userToken, this.afterTokenValidation.bind(this));
             }
         );
     }

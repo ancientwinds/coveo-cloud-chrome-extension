@@ -42,6 +42,10 @@ export class Popup extends BasicComponent {
                     <div class="coveo-search-section">
                         <div class="CoveoSearchbox" data-enable-omnibox="true"></div>
                     </div>
+                    <div class="coveo-summary-section">
+                        <span class="CoveoQuerySummary"></span>
+                        <span class="CoveoQueryDuration"></span>
+                    </div>
                     <div class="coveo-facet-column">
                         <div class="CoveoFacetLeft">
                             <div class="CoveoFacet" data-number-of-values="3" data-title="Year" data-field="@year" data-tab="All"></div>
@@ -126,6 +130,7 @@ export class Popup extends BasicComponent {
                                 Coveo.Analytics.options.organization.defaultValue = message.organizationId;
 
                                 location.hash = `q=${message.activeQuery}`;
+                                console.log('LOCATION: ', location.hash, message);
                                 this.renderSearchPage(parent);
                             } else {
                                 this.renderNotLoggedIn(parent);
