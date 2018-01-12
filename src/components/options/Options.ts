@@ -18,20 +18,23 @@ export class Options extends BasicComponent {
     /*
         Ask the background page to save the options
     */
-    public saveOptions(): void {
-        document.getElementById('messages').innerHTML = 'Saving...';
-        chrome.runtime.sendMessage(
-            {
-                command: 'saveOptions',
-                environment: this._environment,
-                organizationId: this._organizationId
-            }, (message) => {
-                document.getElementById('messages').innerHTML = 'Saved!';
-                setTimeout(() => {
-                    document.getElementById('messages').innerHTML = '';
-                }, 1000)
-            }
-        );
+    public saveOptions() {
+        return new Promise(resolve=> {
+            document.getElementById('messages').innerHTML = 'Saving...';
+            chrome.runtime.sendMessage(
+                {
+                    command: 'saveOptions',
+                    environment: this._environment,
+                    organizationId: this._organizationId
+                }, (message) => {
+                    resolve();
+                    document.getElementById('messages').innerHTML = 'Saved!';
+                    setTimeout(() => {
+                        document.getElementById('messages').innerHTML = '';
+                    }, 1000)
+                }
+            );
+        });
     }
 
     public clearOrganizations(): void {
