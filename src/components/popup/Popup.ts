@@ -46,7 +46,7 @@ export class Popup extends BasicComponent {
                         <span class="CoveoQuerySummary"></span>
                         <span class="CoveoQueryDuration"></span>
                     </div>
-                    <div class="coveo-facet-column">
+                     <div class="coveo-facet-column">
                         <div class="CoveoFacetLeft">
                             <div class="CoveoFacet" data-number-of-values="3" data-title="Year" data-field="@year" data-tab="All"></div>
                             <div class="CoveoFacet" data-number-of-values="3" data-title="Month" data-field="@month" data-tab="All"></div>

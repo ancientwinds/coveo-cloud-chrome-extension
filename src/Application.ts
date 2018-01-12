@@ -74,7 +74,6 @@ export class Application extends BasicComponent {
         let searchBox: HTMLInputElement = (document.querySelector(querySelector) as HTMLInputElement);
         if (searchBox || ignoreActualElementExistence) {
             this._changeWatcher = new ChangeWatcher(querySelector, (searchQuery: string) => {
-                console.log('13 - watchInput', searchQuery);
                 this.search(searchQuery);
             }, 200, !ignoreActualElementExistence);
         } else {

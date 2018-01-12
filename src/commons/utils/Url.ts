@@ -26,11 +26,7 @@ export class Url {
         return params['access_token'] || null;
     }
 
-
     public static checkIfExtensionLocation(fileName: string): boolean {
-        console.log('window.location.href = ', window.location.href);
-
-        // chrome-extension://jaaphohanbmgajiikfkdlblhajcjfjna/html/login.html
         let re = new RegExp('chrome-extension://\\w+/html/' + fileName);
         return re.test(window.location.href);
     }
