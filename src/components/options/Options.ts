@@ -86,10 +86,15 @@ export class Options extends BasicComponent {
                     document.getElementById('organizations').appendChild(option);
                 });
 
-                $('#organizations').chosen({
-                    allow_single_deselect: true,
-                    disable_search_threshold: 10,
-                });
+                if (response.items && response.items.length) {
+                    $('#organizations').prop('disabled', false)
+                }
+
+                $('#organizations')
+                    .chosen({
+                        allow_single_deselect: true,
+                        disable_search_threshold: 10,
+                    });
 
                 $('#organizations').on('change', this.onChangeOrg.bind(this));
             }
@@ -160,7 +165,7 @@ export class Options extends BasicComponent {
             </select>
 
             <h3>Organization</h3>
-            <select id="organizations" class="chosen js-chosen-single-select FullWidthSelect">
+            <select id="organizations" class="chosen js-chosen-single-select FullWidthSelect" disabled>
                 <option value="none">Please select an organization</option>
             </select>
 
