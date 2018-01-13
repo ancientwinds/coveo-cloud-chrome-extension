@@ -15,7 +15,6 @@ import { PlatformUrls } from './components/options/PlatformUrls';
 export class Application extends BasicComponent {
     private _authentication: Authentication;
     private _options: Options;
-    private _last: string;
     private _popup: Popup;
     private _fullsearch: FullSearch;
     private _background: Background;
@@ -76,7 +75,6 @@ export class Application extends BasicComponent {
         if (this._changeWatcher) {
             this._changeWatcher.executeCallback();
         } else {
-            console.log('12 - executeSearch:', this._last);
             this.search('');
         }
     }
@@ -88,19 +86,14 @@ export class Application extends BasicComponent {
                 this.search(searchQuery);
             }, 200, !ignoreActualElementExistence);
         } else {
-            console.log('15 - watchInput');
             this.search('');
         }
     }
 
     public search(query: string): void {
-        console.log('14 - PBULIC search', query,'Last=', this._last);
-        if (query) {
-            this._last = query;
-        }
         chrome.runtime.sendMessage({
             command: 'search',
-            queryExpression: query || this._last,
+            queryExpression: query,
             origin: window.location.href
         });
     }
