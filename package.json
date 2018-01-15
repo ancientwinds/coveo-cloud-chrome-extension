@@ -16,7 +16,6 @@
     ""
   ],
   "dependencies": {
-    "@types/jquery": "3.2.15",
     "atob-lite": "^2.0.0",
     "btoa-lite": "^1.0.0",
     "chalk": "^2.1.0",
@@ -28,12 +27,15 @@
     "webpack-dev-server": "1.16.5"
   },
   "devDependencies": {
+    "@types/chosen-js": "^1.6.2",
     "@types/chai": "^4.0.8",
     "@types/jasmine": "^2.8.2",
+    "@types/jquery": "3.2.15",
     "@types/mocha": "^2.2.44",
     "body-parser": "^1.15.2",
     "chai": "^4.1.2",
     "colors": "^1.1.2",
+    "coveo-styleguide": "^2.0.8",
     "ejs": "^2.5.5",
     "eslint": "^3.1.1",
     "eslint-config-standard": "^10.2.1",

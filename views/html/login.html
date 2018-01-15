@@ -5,9 +5,58 @@
   <title>Login</title>
   <script src="../js/vendor/jquery-3.2.1.min.js"></script>
   <script src="../js/myApp.bundle.js"></script>
+  <style type="text/css">
+    div, span, input, button {
+      line-height: 34px;
+      vertical-align: middle;
+    }
+
+    input { font-size: 16px; width: 100%; }
+
+    button:disabled {
+      cursor: not-allowed;
+      box-shadow: none;
+      opacity: .65;
+    }
+
+    .token-status-good, .token-status-bad {
+      color: white;
+      font-size: 16px;
+      padding: 8px;
+      background-color: #009830;
+    }
+    .token-status-bad { background-color: #ce3f00; }
+
+    .msg { color: #009830; }
+    .msg:empty { display: none; }
+    .msg.danger {
+      color: #a94442;
+      background-color: #f2dede;
+      border: 1px solid #ebccd1;
+      border-radius: 4px;
+      padding: 10px;
+      margin: 10px 0;
+    }
+
+    button {
+      height: 34px;
+      padding: 0 16px;
+      color: #1d4f76;
+      font-family: "Lato", Arial, Helvetica, sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      white-space: nowrap;
+      background-color: #ffffff;
+      border: 1px solid #bcc3ca;
+      border-radius: 2px;
+      cursor: pointer;
+    }
+
+  </style>
 </head>
 
 <body id="application">
-  
+
 </body>
 </html>
