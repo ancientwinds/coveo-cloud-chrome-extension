@@ -48,7 +48,7 @@ export class Application extends BasicComponent {
             }
         } else if (Url.checkIfUrlLocationContains('www.amazon.com')) {
             this.watchInput('[name="field-keywords"]');
-        } else if (Url.checkIfUrlLocationContains('html/popup.html')) {
+        } else if (Url.checkIfExtensionLocation('popup.html')) {
             this._popup = new Popup();
             this._popup.render('body');
             executeSearch = false;
@@ -82,9 +82,9 @@ export class Application extends BasicComponent {
     public watchInput(querySelector: string, ignoreActualElementExistence: boolean = false): void {
         let searchBox: HTMLInputElement = (document.querySelector(querySelector) as HTMLInputElement);
         if (searchBox || ignoreActualElementExistence) {
-            this._changeWatcher = new ChangeWatcher(querySelector, (searchQuery: string) => { 
+            this._changeWatcher = new ChangeWatcher(querySelector, (searchQuery: string) => {
                 this.search(searchQuery);
-            }, 200, !ignoreActualElementExistence); 
+            }, 200, !ignoreActualElementExistence);
         } else {
             this.search('');
         }
@@ -94,7 +94,7 @@ export class Application extends BasicComponent {
         chrome.runtime.sendMessage({
             command: 'search',
             queryExpression: query,
-            origin: window.location.href 
+            origin: window.location.href
         });
     }
 
@@ -111,18 +111,18 @@ export class Application extends BasicComponent {
         chrome.storage.local.get(
             {
                 'coveoforgooglecloudsearch_environment': 'production'
-            }, 
+            },
             (items) => {
-                if (Url.checkIfUrlLocationContains('/login.html')) {
+                if (Url.checkIfExtensionLocation('login.html')) {
                     this._authentication = new Authentication();
                     this._authentication.render(`#${this._guid}`);
-                } else if (Url.checkIfUrlLocationContains('/o2c.html')) {
+                } else if (Url.checkIfExtensionLocation('o2c.html')) {
                     this._authentication = new Authentication();
                     this._authentication.processOAuthReturn();
-                } else if (Url.checkIfUrlLocationContains('/options.html')) {
+                } else if (Url.checkIfExtensionLocation('options.html')) {
                     this._options = new Options();
                     this._options.render(`#${this._guid}`);
-                } else if (Url.checkIfUrlLocationContains('/background.html')) {
+                } else if (Url.checkIfExtensionLocation('background.html')) {
                     this._background = new Background();
                     this._background.loadOptions(() => {
                         this._background.listenForMessages();

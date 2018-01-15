@@ -36,7 +36,7 @@ export class Popup extends BasicComponent {
     private renderSearchPage(parent: string): void {
         super.render(parent, `
             <div class="CoveoChromeExtension">
-                <div id="search" class="CoveoSearchInterface" data-enable-history="true" data-design="new">
+                <div id="search" class="CoveoSearchInterface" data-enable-history="true" data-design="new" data-expression="NOT (@filetype=(Txt, .oleFile, Folder))">
                 <div class="CoveoChromeExtensionHeader">
                     <div class="CoveoAnalytics"></div>
                     <div class="coveo-search-section">
@@ -61,6 +61,7 @@ export class Popup extends BasicComponent {
                 </div>
                 <div id="coveo-main-section" class="coveo-main-section">
                     <div class="coveo-results-column">
+                        <div class="CoveoQuerySummary"></div>
                         <div class="CoveoTriggers"></div>
                         <div class="CoveoHiddenQuery"></div>
                         <div class="CoveoDidYouMean"></div>
@@ -124,7 +125,7 @@ export class Popup extends BasicComponent {
 
                                 Coveo.Analytics.options.endpoint.defaultValue = PlatformUrls.getAnalyticsUrl(message.environment);
                                 Coveo.Analytics.options.organization.defaultValue = message.organizationId;
-                                
+
                                 let search: any = document.querySelector('#search');
                                 Coveo.$$(search).on('afterInitialization', ()=>{
                                     Coveo.state(search, 'q', message.activeQuery);

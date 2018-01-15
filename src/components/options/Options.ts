@@ -18,24 +18,29 @@ export class Options extends BasicComponent {
     /*
         Ask the background page to save the options
     */
-    public saveOptions(): void {
-        document.getElementById('messages').innerHTML = 'Saving...';
-        chrome.runtime.sendMessage(
-            {
-                command: 'saveOptions',
-                environment: this._environment,
-                organizationId: this._organizationId
-            }, (message) => {
-                document.getElementById('messages').innerHTML = 'Saved!';
-                setTimeout(() => {
-                    document.getElementById('messages').innerHTML = '';
-                }, 1000)
-            }
-        );
+    public saveOptions(): Promise<any> {
+        return new Promise(resolve=> {
+            document.getElementById('messages').innerHTML = 'Saving...';
+            chrome.runtime.sendMessage(
+                {
+                    command: 'saveOptions',
+                    environment: this._environment,
+                    organizationId: this._organizationId
+                }, (message) => {
+                    resolve();
+                    document.getElementById('messages').innerHTML = 'Saved!';
+                    setTimeout(() => {
+                        document.getElementById('messages').innerHTML = '';
+                    }, 1000)
+                }
+            );
+        });
     }
 
     public clearOrganizations(): void {
-        document.getElementById('organizations').innerHTML = '<option value="none">Please select an organization</option>';
+        $('#organizations')
+            .html('<option value="none">Please select an organization</option>')
+            .trigger('chosen:updated')
     }
 
     public validateOptions() {
@@ -67,25 +72,40 @@ export class Options extends BasicComponent {
     private loadOrganizations(): void {
         this.clearOrganizations();
 
-        let message = chrome.runtime.sendMessage({command: 'getActiveQueryAndOptions'},
-            (message: any) => {
-                Organizations.getOrganizationList(
-                    message.userToken,
-                    message.environment,
-                    (response: any) => {
-                        (response.items || []).forEach( (organization: any, index:number ) => {
-                            let option: HTMLOptionElement = document.createElement('option');
-                            option.value = organization.id;
-                            option.innerHTML = organization.displayName;
-                            if (organization.id === message.organizationId) {
-                                option.selected = true;
-                            }
-                            document.getElementById('organizations').appendChild(option);
-                        });
+        Organizations.getOrganizationList(
+            this._userToken,
+            this._environment,
+            (response: any) => {
+                (response.items || []).forEach( (organization: any, index:number ) => {
+                    let option: HTMLOptionElement = document.createElement('option');
+                    option.value = organization.id;
+                    option.innerHTML = organization.displayName;
+                    if (organization.id === this._organizationId) {
+                        option.selected = true;
                     }
-                );
+                    document.getElementById('organizations').appendChild(option);
+                });
+
+                if (response.items && response.items.length) {
+                    $('#organizations').prop('disabled', false)
+                }
+
+                $('#organizations')
+                    .chosen({
+                        allow_single_deselect: true,
+                        disable_search_threshold: 10,
+                    });
+
+                $('#organizations').on('change', this.onChangeOrg.bind(this));
             }
         );
+    }
+
+    private updateSelectOption(id, val): void {
+        let selectEl = $(id);
+        $('*[selected]', selectEl).removeAttr('selected');
+        $(`option[value="${val}"]`, selectEl).attr('selected', 'selected');
+        selectEl.trigger('chosen:updated');
     }
 
     private loadOptions(): void {
@@ -95,13 +115,7 @@ export class Options extends BasicComponent {
                 this._environment = message.environment;
                 this._organizationId = message.organizationId;
 
-                let options: any = (document.getElementById('environment') as HTMLSelectElement).options;
-                for (let i = 0; i < options.length; i++) {
-                    if (options[i].value == this._environment) {
-                        (document.getElementById('environment') as HTMLSelectElement).selectedIndex = i;
-                        break;
-                    }
-                }
+                this.updateSelectOption('#environment', this._environment);
 
                 this.loadOrganizations();
             }
@@ -112,24 +126,7 @@ export class Options extends BasicComponent {
         chrome.runtime.sendMessage({command: 'getActiveQueryAndOptions'},
             (message: any) => {
                 if (this._userToken != message.userToken) {
-                    let userIsLoggedIn = chrome.runtime.sendMessage(
-                        {
-                            command: 'isUserLoggedIn'
-                        },
-                        (userIsLoggedInMessage: any) => {
-                            if (userIsLoggedInMessage.userIsLoggedIn) {
-                                this.loadOptions();
-                            } else {
-                                this.clearOrganizations();
-                            }
-                        }
-                    );
-
-                    chrome.runtime.sendMessage({
-                        command: 'search',
-                        queryExpression: '',
-                        origin: window.location.href
-                    });
+                    window.location.reload();
                 }
 
                 setTimeout(() => {
@@ -139,63 +136,53 @@ export class Options extends BasicComponent {
         );
     }
 
+    private onChangeEnv(evt, params) {
+        this._environment = params.selected;
+        this._userToken = null;
+        this._organizationId = null;
+
+        this.saveOptions().then(()=>{
+            chrome.runtime.sendMessage( { command: 'logout' },
+                (message) => {
+                    window.location.reload();
+                }
+            );
+        });
+    }
+
+    private onChangeOrg(evt, params) {
+        this._organizationId = params.selected;
+        this.saveOptions();
+    }
+
     public render(parent: string): void {
         super.render(parent, `
-            <h4>Environment</h4>
-            <br />
-            <select id="environment" class="FullWidthSelect">
+            <h3>Environment</h3>
+            <select id="environment" class="chosen js-chosen-single-select FullWidthSelect">
                 <option value="production">Coveo Cloud</option>
                 <option value="hipaa">Coveo Cloud HIPAA</option>
                 <option value="qa">Coveo Cloud Internal Testing</option>
             </select>
-            <h4>Organization</h4>
-            <br />
-            <select id="organizations" class="FullWidthSelect">
+
+            <h3>Organization</h3>
+            <select id="organizations" class="chosen js-chosen-single-select FullWidthSelect" disabled>
                 <option value="none">Please select an organization</option>
             </select>
-            <br /><br />
-            <h4>Login status</h4>
-            <iframe id="loginFrame" style="border: none; width: 300px; height: 300px;" src="login.html"></iframe>
-            <div id="messages"></div>
+
+            <h3>Login status</h3>
+            <iframe id="loginFrame" style="border: none; width: 100%; min-height: 100px;" src="login.html"></iframe>
+
+            <div id="messages" style="flex: 1;min-height: 50px;"></div>
         `);
 
-        let userIsLoggedIn = chrome.runtime.sendMessage(
-            {
-                command: 'isUserLoggedIn'
-            },
-            (userIsLoggedInMessage: any) => {
-                this._userToken = userIsLoggedInMessage.userToken;
-
-                if (userIsLoggedInMessage.userIsLoggedIn) {
-                    this.loadOptions();
-                }
-
-                this.watchIfLoginStateChanged();
-            }
-        );
-
-        document.getElementById('environment').addEventListener("change", () => {
-            let select: HTMLSelectElement = document.getElementById('environment') as HTMLSelectElement;
-            this._environment = (select.options[select.selectedIndex] as HTMLOptionElement).value;
-            this._userToken = null;
-            this._organizationId = null;
-
-            chrome.runtime.sendMessage(
-                {
-                    command: 'logout'
-                },
-                (message) => {
-                    this.saveOptions();
-                    this.clearOrganizations();
-                    (document.getElementById('loginFrame') as HTMLIFrameElement).contentWindow.location.reload();
-                }
-            );
+        $('#environment').chosen({
+            allow_single_deselect: true,
+            disable_search_threshold: 10,
         });
 
-        document.getElementById('organizations').addEventListener("change", () => {
-            let select: HTMLSelectElement = document.getElementById('organizations') as HTMLSelectElement;
-            this._organizationId = (select.options[select.selectedIndex] as HTMLOptionElement).value;
-            this.saveOptions();
-        });
+        $('#environment').on('change', this.onChangeEnv.bind(this));
+
+        this.loadOptions();
+        this.watchIfLoginStateChanged();
     }
 }
